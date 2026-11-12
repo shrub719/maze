@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include "include/graphics.h"
 
 static const int SIZE = 25;
-static const int WIDTH = 30;
+static const int WIDTH = 25;
 static const int HEIGHT = 20;
+
+#define STACK 256
 
 typedef struct {
     int width;
@@ -16,12 +19,46 @@ char getCell(Maze* maze, int i, int j) {
     return maze->cells[j * maze->width + i];
 }
 
+typedef struct {
+    int x;
+    int y;
+} CellRef;
+
+typedef struct {
+    CellRef cells[STACK];
+    int size;
+} CellStack;
+
+void initStack(CellStack* stack) {
+    stack->size = 0;
+}
+
+void stackPush(CellStack* stack, CellRef cell) {
+    if (stack->size >= 256) {
+        message("stack overflow");
+        return;
+    }
+    stack->cells[stack->size] = cell;
+    stack->size += 1;
+}
+
+CellRef stackPop(CellStack* stack) {
+    if (stack->size == 0) {
+        message("stack empty");
+        return (CellRef){INT_MAX, INT_MAX};  // this is probably bad; TODO
+    }
+    stack->size -= 1;
+    return stack->cells[stack->size + 1];
+}
+
 void drawCell(Maze* maze, int i, int j) {
     char cell = getCell(maze, i, j);
     if (cell == 1) {
         setColour(black);
     } else if (cell == 0) {
         setColour(white);
+    } else if (cell == 2) { 
+        setColour(green);
     } else {
         message("invalid colour\n");
         setColour(magenta);
@@ -44,6 +81,17 @@ void uninitMaze(Maze* maze) {
     free(maze->cells);
 }
 
+void genMazeDFS(Maze* maze) {
+    CellStack stack;
+    initStack(&stack);
+
+    int x = 0;
+    int y = 0;
+    stackPush(&stack, (CellRef){0, 0});
+
+    int c = rand() % 4;
+}
+
 void drawMaze(Maze* maze) {
     background();
     for (int i = 0; i < maze->width; i++)  {
@@ -56,6 +104,7 @@ void drawMaze(Maze* maze) {
 int main() {
     // displayImageURL("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.scHvyIKsLexn0eOtLY4PQwAAAA%3Fr%3D0%26pid%3DApi&f=1&ipt=0877f0748ce0d2c32f1483db716648655d0f364d8d4a46f7d7235682cc741b40&ipo=images", 0, 0);
 
+    srand(3);
     setWindowSize(SIZE*WIDTH, SIZE*HEIGHT);
 
     Maze maze;
