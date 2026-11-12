@@ -20,6 +20,7 @@ void initRobot(Robot* robot) {
     robot->pos.x = 0;
     robot->pos.y = 1;
     robot->dir = EAST;
+    robot->anim = STEPS;
 }
 
 void drawRobot(Robot* robot) {
@@ -45,12 +46,12 @@ CellRef getForwardCell(Robot* robot) {
 
 void right(Robot* robot) {
     robot->dir = (robot->dir + 1) % 4;
-    advanceRobot(robot);
+    if (robot->anim >= TURNS) advanceRobot(robot);
 }
 
 void left(Robot* robot) {
     robot->dir = (robot->dir + 3) % 4;
-    advanceRobot(robot);
+    if (robot->anim >= TURNS) advanceRobot(robot);
 }
 
 // does not check
@@ -61,15 +62,15 @@ void forward(Robot* robot, Maze* maze) {
     }
 
     robot->pos = getForwardCell(robot);
-    advanceRobot(robot);
+    if (robot->anim >= STEPS) advanceRobot(robot);
 }
 
 int atMarker(Robot* robot, Maze* maze) {
-    return (getCell(maze, robot->pos) == 3);
+    return (getCell(maze, robot->pos) == MARKER);
 }
 
 int canMoveForward(Robot* robot, Maze* maze) {
-    return (getCell(maze, getForwardCell(robot)) == 0);
+    return (getCell(maze, getForwardCell(robot)) != WALL);
 }
 
 void advanceRobot(Robot* robot) {

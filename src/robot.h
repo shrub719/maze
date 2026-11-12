@@ -4,9 +4,14 @@ typedef enum {
     NORTH = 0, EAST, SOUTH, WEST
 } Direction;
 
+typedef enum {
+    STEPS = 0, TURNS
+} Animation;
+
 typedef struct {
     CellRef pos;
     Direction dir;
+    Animation anim;
 } Robot;
 
 void initRobot(Robot* robot);

@@ -3,7 +3,7 @@
 #include "maze.h"
 
 // TODO: add checks to these
-char getCell(Maze* maze, CellRef cell) {
+Cell getCell(Maze* maze, CellRef cell) {
     int i = cell.y * maze->width + cell.x;
     if (i >= maze->width * maze->height || i < 0) return -1;
 
@@ -24,12 +24,12 @@ CellRef addCells(CellRef c1, CellRef c2) {
 }
 
 void drawCell(Maze* maze, CellRef cell) {
-    char c = getCell(maze, cell);
-    if (c == 1) {
+    Cell c = getCell(maze, cell);
+    if (c == WALL) {
         setColour(black);
-    } else if (c == 0) {
+    } else if (c == EMPTY) {
         setColour(white);
-    } else if (c == 2) { 
+    } else if (c == MARKER) { 
         setColour(green);
     } else {
         message("invalid colour\n");
@@ -43,7 +43,7 @@ void initMaze(Maze* maze, int width, int height) {
     maze->width = width;
     maze->height = height;
     int count = width * height;
-    maze->cells = malloc(count * sizeof(char));
+    maze->cells = malloc(count * sizeof(Cell));
     for (int i = 0; i < count; i++) {
         maze->cells[i] = 1;
     }

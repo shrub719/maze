@@ -1,9 +1,13 @@
 #pragma once
 
+typedef enum {
+    EMPTY = 0, WALL, MARKER
+} Cell;
+
 typedef struct {
     int width;
     int height;
-    char* cells;
+    Cell* cells;
 } Maze;
 
 typedef struct {
@@ -11,7 +15,7 @@ typedef struct {
     int y;
 } CellRef;
 
-char getCell(Maze* maze, CellRef cell);
+Cell getCell(Maze* maze, CellRef cell);
 void setCell(Maze* maze, CellRef cell, int c);
 CellRef addCells(CellRef c1, CellRef c2);
 void initMaze(Maze* maze, int width, int height);

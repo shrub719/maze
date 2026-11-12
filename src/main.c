@@ -21,7 +21,7 @@ int main() {
     drawRobot(&robot);
 
     int checked = 0;
-    while (1) {
+    while (!atMarker(&robot, &maze)) {
         if (checked) checked = 0;
         else left(&robot);
 
