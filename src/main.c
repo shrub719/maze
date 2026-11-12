@@ -5,7 +5,7 @@
 
 static const int SIZE = 25;
 static const int WIDTH = 25;
-static const int HEIGHT = 20;
+static const int HEIGHT = 19;
 
 #define STACK 256
 
@@ -15,8 +15,13 @@ typedef struct {
     char* cells;
 } Maze;
 
+// TODO: add checks to these
 char getCell(Maze* maze, int i, int j) {
     return maze->cells[j * maze->width + i];
+}
+
+void setCell(Maze* maze, int i, int j, int c) {
+    maze->cells[j * maze->width + i] = c;
 }
 
 typedef struct {
@@ -33,22 +38,40 @@ void initStack(CellStack* stack) {
     stack->size = 0;
 }
 
-void stackPush(CellStack* stack, CellRef cell) {
+void pushStack(CellStack* stack, CellRef cell) {
     if (stack->size >= 256) {
-        message("stack overflow");
+        message("stack overflow\n");
         return;
     }
     stack->cells[stack->size] = cell;
     stack->size += 1;
 }
 
-CellRef stackPop(CellStack* stack) {
+CellRef popStack(CellStack* stack) {
     if (stack->size == 0) {
-        message("stack empty");
+        message("stack empty\n");
         return (CellRef){INT_MAX, INT_MAX};  // this is probably bad; TODO
     }
     stack->size -= 1;
-    return stack->cells[stack->size + 1];
+    return stack->cells[stack->size];
+}
+
+typedef struct {
+    CellRef cells[4];
+    int size;
+} NeighbourArray;
+
+void clearArray(NeighbourArray* array) {
+    array->size = 0;
+}
+
+void addArray(NeighbourArray* array, CellRef cell) {
+    if (array->size >= 4) {
+        message("array overflow\n");
+        return;
+    }
+    array->cells[array->size] = cell;
+    array->size += 1;
 }
 
 void drawCell(Maze* maze, int i, int j) {
@@ -81,15 +104,68 @@ void uninitMaze(Maze* maze) {
     free(maze->cells);
 }
 
+int isCellValid(Maze* maze, CellRef cell) {
+    return (
+        0 < cell.x && cell.x < maze->width - 1      // is the 0 necessary? is int signed?
+     && 0 < cell.y && cell.y < maze->height - 1
+    );
+}
+
+void populateArray(NeighbourArray* array, Maze* maze, CellRef cell) {
+    clearArray(array);
+
+    int offsets[8] = {
+        2, 0,
+        -2, 0,
+        0, 2,
+        0, -2
+    };
+
+    for (int i = 0; i < 8; i += 2) {
+        int x = cell.x + offsets[i];
+        int y = cell.y + offsets[i + 1];
+        CellRef nb = {x, y};
+        if (isCellValid(maze, nb)) {
+            if (getCell(maze, x, y) != 0) {
+                addArray(array, nb);
+            }
+        }
+    }
+}
+
+CellRef chooseArray(NeighbourArray* array) {
+    if (array->size == 1) {
+        return array->cells[0];
+    }
+
+    int c = rand() % (array->size - 1);
+    return array->cells[c];
+}
+
 void genMazeDFS(Maze* maze) {
     CellStack stack;
     initStack(&stack);
+    NeighbourArray nbs;
+    CellRef cell;
 
-    int x = 0;
-    int y = 0;
-    stackPush(&stack, (CellRef){0, 0});
+    cell.x = 1;
+    cell.y = 1;
+    setCell(maze, cell.x, cell.y, 0);   // mark as visited
+                                        // TODO: do we need to??
 
-    int c = rand() % 4;
+    int cont = 1;
+    while (cont) {
+        populateArray(&nbs, maze, cell);    // get list of neighbours
+        if (nbs.size == 0) {
+            if (cell.x == 1 && cell.y == 1) cont = 0;
+            cell = popStack(&stack);
+        } else {
+            pushStack(&stack, cell);  
+            cell = chooseArray(&nbs);   // random unvisited neighbour
+            setCell(maze, cell.x, cell.y, 0);
+            // TODO: also fill the one it jumps over
+        }
+    }
 }
 
 void drawMaze(Maze* maze) {
@@ -111,6 +187,7 @@ int main() {
     initMaze(&maze, WIDTH, HEIGHT);
     
     clear();
+    genMazeDFS(&maze);
     drawMaze(&maze);
 
     uninitMaze(&maze);
