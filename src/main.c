@@ -3,7 +3,7 @@
 #include "include/graphics.h"
 
 static const int SIZE = 25;
-static const int WIDTH = 20;
+static const int WIDTH = 30;
 static const int HEIGHT = 20;
 
 typedef struct {
