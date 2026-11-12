@@ -16,20 +16,20 @@ typedef struct {
     char* cells;
 } Maze;
 
-// TODO: add checks to these
-// TODO: standardise so they all use CellRef
-char getCell(Maze* maze, int i, int j) {
-    return maze->cells[j * maze->width + i];
-}
-
-void setCell(Maze* maze, int i, int j, int c) {
-    maze->cells[j * maze->width + i] = c;
-}
-
 typedef struct {
     int x;
     int y;
 } CellRef;
+
+// TODO: add checks to these
+// TODO: standardise so they all use CellRef
+char getCell(Maze* maze, CellRef cell) {
+    return maze->cells[cell.y * maze->width + cell.x];
+}
+
+void setCell(Maze* maze, CellRef cell, int c) {
+    maze->cells[cell.y * maze->width + cell.x] = c;
+}
 
 typedef struct {
     CellRef cells[STACK];
@@ -83,20 +83,20 @@ void addArray(NeighbourArray* array, CellRef cell) {
     array->size += 1;
 }
 
-void drawCell(Maze* maze, int i, int j) {
-    char cell = getCell(maze, i, j);
-    if (cell == 1) {
+void drawCell(Maze* maze, CellRef cell) {
+    char c = getCell(maze, cell);
+    if (c == 1) {
         setColour(black);
-    } else if (cell == 0) {
+    } else if (c == 0) {
         setColour(white);
-    } else if (cell == 2) { 
+    } else if (c == 2) { 
         setColour(green);
     } else {
         message("invalid colour\n");
         setColour(magenta);
     }
 
-    fillRect(i*SIZE, j*SIZE, (i + 1)*SIZE, (j+1)*SIZE);
+    fillRect(cell.x*SIZE, cell.y*SIZE, (cell.x + 1)*SIZE, (cell.y+1)*SIZE);
 }
 
 void initMaze(Maze* maze, int width, int height) {
@@ -133,7 +133,7 @@ void populateArray(NeighbourArray* array, Maze* maze, CellRef cell) {
     for (int i = 0; i < 4; i++) {
         CellRef nb = addCells(cell, offsets[i]);
         if (isCellValid(maze, nb)) {
-            if (getCell(maze, nb.x, nb.y) != 0) {
+            if (getCell(maze, nb) != 0) {
                 addArray(array, offsets[i]);
             }
         }
@@ -157,7 +157,7 @@ void genMazeDFS(Maze* maze) {
 
     cell.x = 1;
     cell.y = 1;
-    setCell(maze, cell.x, cell.y, 0);   // mark as visited
+    setCell(maze, cell, 0);   // mark as visited
                                         // TODO: do we need to??
 
     int cont = 1;
@@ -171,21 +171,21 @@ void genMazeDFS(Maze* maze) {
             CellRef offset = chooseArray(&nbs);     // random unvisited neighbour
             CellRef step = {cell.x + offset.x/2, cell.y + offset.y/2};  // nicer way of doing this; TODO
             cell = addCells(cell, offset);
-            setCell(maze, step.x, step.y, 0);
-            setCell(maze, cell.x, cell.y, 0);
+            setCell(maze, step, 0);
+            setCell(maze, cell, 0);
             // TODO: also fill the one it jumps over
         }
     }
 
-    setCell(maze, 0, 1, 0);
-    setCell(maze, maze->width-1, maze->height-2, 2);
+    setCell(maze, (CellRef){0, 1}, 0);
+    setCell(maze, (CellRef){maze->width-1, maze->height-2}, 2);
 }
 
 void drawMaze(Maze* maze) {
     background();
     for (int i = 0; i < maze->width; i++)  {
         for (int j = 0; j < maze->height; j++) {
-            drawCell(maze, i, j);
+            drawCell(maze, (CellRef){i, j});
         }
     }
 }
