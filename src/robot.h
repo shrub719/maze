@@ -1,7 +1,7 @@
 #include "maze.h"
 
 typedef enum {
-    NORTH, EAST, SOUTH, WEST
+    NORTH = 0, EAST, SOUTH, WEST
 } Direction;
 
 typedef struct {
@@ -16,4 +16,5 @@ void left(Robot* robot);
 void forward(Robot* robot, Maze* maze);
 int atMarker(Robot* robot, Maze* maze);
 int canMoveForward(Robot* robot, Maze* maze);
+void advanceRobot(Robot* robot);
 

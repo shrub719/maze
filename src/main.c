@@ -20,10 +20,17 @@ int main() {
     initRobot(&robot);
     drawRobot(&robot);
 
+    int checked = 0;
     while (1) {
-        forward(&robot, &maze);
-        drawRobot(&robot);
-        sleep(1000);
+        if (checked) checked = 0;
+        else left(&robot);
+
+        if (canMoveForward(&robot, &maze)) {
+            forward(&robot, &maze);
+        } else {
+            right(&robot);
+            checked = 1;
+        }
     }
 
     uninitMaze(&maze);

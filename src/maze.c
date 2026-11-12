@@ -4,11 +4,17 @@
 
 // TODO: add checks to these
 char getCell(Maze* maze, CellRef cell) {
-    return maze->cells[cell.y * maze->width + cell.x];
+    int i = cell.y * maze->width + cell.x;
+    if (i >= maze->width * maze->height || i < 0) return -1;
+
+    return maze->cells[i];
 }
 
 void setCell(Maze* maze, CellRef cell, int c) {
-    maze->cells[cell.y * maze->width + cell.x] = c;
+    int i = cell.y * maze->width + cell.x;
+    if (i >= maze->width * maze->height || i < 0) return;
+
+    maze->cells[i] = c;
 }
 CellRef addCells(CellRef c1, CellRef c2) {
     return (CellRef){

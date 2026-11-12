@@ -6,13 +6,13 @@ static const int circleOffsets[] = {
     7, 2,
     11, 6,
     7, 11,
-    2, 7
+    1, 6
 };
 
 static const int directionalOffsets[] = {
-    0, 1, 
-    1, 0, 
     0, -1, 
+    1, 0, 
+    0, 1, 
     -1, 0
 };
 
@@ -44,11 +44,13 @@ CellRef getForwardCell(Robot* robot) {
 }
 
 void right(Robot* robot) {
-    robot->dir += 3;
+    robot->dir = (robot->dir + 1) % 4;
+    advanceRobot(robot);
 }
 
 void left(Robot* robot) {
-    robot->dir += 1;
+    robot->dir = (robot->dir + 3) % 4;
+    advanceRobot(robot);
 }
 
 // does not check
@@ -59,6 +61,7 @@ void forward(Robot* robot, Maze* maze) {
     }
 
     robot->pos = getForwardCell(robot);
+    advanceRobot(robot);
 }
 
 int atMarker(Robot* robot, Maze* maze) {
@@ -67,5 +70,10 @@ int atMarker(Robot* robot, Maze* maze) {
 
 int canMoveForward(Robot* robot, Maze* maze) {
     return (getCell(maze, getForwardCell(robot)) == 0);
+}
+
+void advanceRobot(Robot* robot) {
+    drawRobot(robot);
+    sleep(SLEEP);
 }
 
