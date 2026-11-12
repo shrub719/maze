@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <time.h>
 #include "include/graphics.h"
 
 static const int SIZE = 25;
@@ -16,6 +17,7 @@ typedef struct {
 } Maze;
 
 // TODO: add checks to these
+// TODO: standardise so they all use CellRef
 char getCell(Maze* maze, int i, int j) {
     return maze->cells[j * maze->width + i];
 }
@@ -54,6 +56,13 @@ CellRef popStack(CellStack* stack) {
     }
     stack->size -= 1;
     return stack->cells[stack->size];
+}
+
+CellRef addCells(CellRef c1, CellRef c2) {
+    return (CellRef){
+        c1.x + c2.x,
+        c1.y + c2.y
+    };
 }
 
 typedef struct {
@@ -111,23 +120,21 @@ int isCellValid(Maze* maze, CellRef cell) {
     );
 }
 
+// TODO: the offsets are always the same. maybe just have it return a quadruplet
+// of bools?
 void populateArray(NeighbourArray* array, Maze* maze, CellRef cell) {
     clearArray(array);
 
-    int offsets[8] = {
-        2, 0,
-        -2, 0,
-        0, 2,
-        0, -2
+    CellRef offsets[4] = {
+        {2, 0}, {-2, 0},
+        {0, 2}, {0, -2}
     };
 
-    for (int i = 0; i < 8; i += 2) {
-        int x = cell.x + offsets[i];
-        int y = cell.y + offsets[i + 1];
-        CellRef nb = {x, y};
+    for (int i = 0; i < 4; i++) {
+        CellRef nb = addCells(cell, offsets[i]);
         if (isCellValid(maze, nb)) {
-            if (getCell(maze, x, y) != 0) {
-                addArray(array, nb);
+            if (getCell(maze, nb.x, nb.y) != 0) {
+                addArray(array, offsets[i]);
             }
         }
     }
@@ -138,7 +145,7 @@ CellRef chooseArray(NeighbourArray* array) {
         return array->cells[0];
     }
 
-    int c = rand() % (array->size - 1);
+    int c = rand() % array->size;
     return array->cells[c];
 }
 
@@ -161,11 +168,17 @@ void genMazeDFS(Maze* maze) {
             cell = popStack(&stack);
         } else {
             pushStack(&stack, cell);  
-            cell = chooseArray(&nbs);   // random unvisited neighbour
+            CellRef offset = chooseArray(&nbs);     // random unvisited neighbour
+            CellRef step = {cell.x + offset.x/2, cell.y + offset.y/2};  // nicer way of doing this; TODO
+            cell = addCells(cell, offset);
+            setCell(maze, step.x, step.y, 0);
             setCell(maze, cell.x, cell.y, 0);
             // TODO: also fill the one it jumps over
         }
     }
+
+    setCell(maze, 0, 1, 0);
+    setCell(maze, maze->width-1, maze->height-2, 2);
 }
 
 void drawMaze(Maze* maze) {
