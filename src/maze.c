@@ -1,7 +1,5 @@
-#include <stdlib.h>
+#include "include.h"
 #include <time.h>
-#include "include/graphics.h"
-#include "constants.h"
 #include "maze.h"
 
 // TODO: add checks to these
@@ -12,29 +10,6 @@ char getCell(Maze* maze, CellRef cell) {
 void setCell(Maze* maze, CellRef cell, int c) {
     maze->cells[cell.y * maze->width + cell.x] = c;
 }
-
-void initStack(CellStack* stack) {
-    stack->size = 0;
-}
-
-void pushStack(CellStack* stack, CellRef cell) {
-    if (stack->size >= 256) {
-        message("stack overflow\n");
-        return;
-    }
-    stack->cells[stack->size] = cell;
-    stack->size += 1;
-}
-
-CellRef popStack(CellStack* stack) {
-    if (stack->size == 0) {
-        message("stack empty\n");
-        return (CellRef){-1, -1};  // this is probably bad; TODO
-    }
-    stack->size -= 1;
-    return stack->cells[stack->size];
-}
-
 CellRef addCells(CellRef c1, CellRef c2) {
     return (CellRef){
         c1.x + c2.x,

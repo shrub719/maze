@@ -1,9 +1,29 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "constants.h"
+#include "include.h"
 #include "maze.h"
 #include "gen.h"
-#include "include/graphics.h"
+
+void initStack(CellStack* stack) {
+    stack->size = 0;
+}
+
+void pushStack(CellStack* stack, CellRef cell) {
+    if (stack->size >= 256) {
+        message("stack overflow\n");
+        return;
+    }
+    stack->cells[stack->size] = cell;
+    stack->size += 1;
+}
+
+CellRef popStack(CellStack* stack) {
+    if (stack->size == 0) {
+        message("stack empty\n");
+        return (CellRef){-1, -1};  // this is probably bad; TODO
+    }
+    stack->size -= 1;
+    return stack->cells[stack->size];
+}
+
 
 void clearArray(NeighbourArray* array) {
     array->size = 0;
@@ -17,7 +37,6 @@ void addArray(NeighbourArray* array, CellRef cell) {
     array->cells[array->size] = cell;
     array->size += 1;
 }
-
 
 int isCellValid(Maze* maze, CellRef cell) {
     return (
