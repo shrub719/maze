@@ -19,7 +19,7 @@ int main() {
 
     Robot robot;
     initRobot(&robot);
-    drawRobot(&robot);
+    drawRobot(&robot, &maze);
 
     solveMazeHug(&robot, &maze);
 

@@ -1,6 +1,7 @@
 #include "include.h"
 #include "robot.h"
 #include "maze.h"
+#include "pov.h"
 
 static const int circleOffsets[] = {
     7, 2,
@@ -21,19 +22,24 @@ void initRobot(Robot* robot) {
     robot->pos.y = 1;
     robot->dir = EAST;
     robot->anim = STEPS;
+    robot->mode = TWODEE;
 }
 
-void drawRobot(Robot* robot) {
-    int x = SIZE*robot->pos.x;
-    int y = SIZE*robot->pos.y;
-    int i = 2*robot->dir;
+void drawRobot(Robot* robot, Maze* maze) {
+    if (robot->mode == TWODEE) {
+        int x = SIZE*robot->pos.x;
+        int y = SIZE*robot->pos.y;
+        int i = 2*robot->dir;
 
-    foreground();
-    clear();
-    setColour(darkgray);
-    fillOval(x+1, y+1, 21, 21);
-    setColour(red);
-    fillOval(x+circleOffsets[i], y+circleOffsets[i+1], 12, 12);
+        foreground();
+        clear();
+        setColour(darkgray);
+        fillOval(x+1, y+1, 21, 21);
+        setColour(red);
+        fillOval(x+circleOffsets[i], y+circleOffsets[i+1], 12, 12);
+    } else if (robot->mode == THREEDEE) {
+        drawScene(robot, maze);
+    }
 }
 
 CellRef getForwardCell(Robot* robot) {
@@ -44,14 +50,14 @@ CellRef getForwardCell(Robot* robot) {
     );
 }
 
-void right(Robot* robot) {
+void right(Robot* robot, Maze* maze) {
     robot->dir = (robot->dir + 1) % 4;
-    if (robot->anim >= TURNS) advanceRobot(robot);
+    if (robot->anim >= TURNS) advanceRobot(robot, maze);
 }
 
-void left(Robot* robot) {
+void left(Robot* robot, Maze* maze) {
     robot->dir = (robot->dir + 3) % 4;
-    if (robot->anim >= TURNS) advanceRobot(robot);
+    if (robot->anim >= TURNS) advanceRobot(robot, maze);
 }
 
 // does not check
@@ -62,7 +68,7 @@ void forward(Robot* robot, Maze* maze) {
     }
 
     robot->pos = getForwardCell(robot);
-    if (robot->anim >= STEPS) advanceRobot(robot);
+    if (robot->anim >= STEPS) advanceRobot(robot, maze);
 }
 
 int atMarker(Robot* robot, Maze* maze) {
@@ -73,8 +79,8 @@ int canMoveForward(Robot* robot, Maze* maze) {
     return (getCell(maze, getForwardCell(robot)) != WALL);
 }
 
-void advanceRobot(Robot* robot) {
-    drawRobot(robot);
+void advanceRobot(Robot* robot, Maze* maze) {
+    drawRobot(robot, maze);
     sleep(SLEEP);
 }
 
