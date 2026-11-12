@@ -1,5 +1,5 @@
 build:
-    gcc ./src/main.c ./src/include/graphics.c -o maze
+    gcc ./src/*.c ./src/include/*.c -o maze
     
 [default]
 run: build
