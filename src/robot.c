@@ -22,7 +22,7 @@ void initRobot(Robot* robot) {
     robot->pos.y = 1;
     robot->dir = EAST;
     robot->anim = STEPS;
-    robot->mode = TWODEE;
+    robot->mode = THREEDEE;
 }
 
 void drawRobot(Robot* robot, Maze* maze) {
@@ -38,7 +38,7 @@ void drawRobot(Robot* robot, Maze* maze) {
         setColour(red);
         fillOval(x+circleOffsets[i], y+circleOffsets[i+1], 12, 12);
     } else if (robot->mode == THREEDEE) {
-        drawScene(robot, maze);
+        drawThreeDee(robot, maze);
     }
 }
 
