@@ -1,11 +1,17 @@
 #pragma once
 
 typedef struct {
-    int x0; int y0;
-    int x1; int y1;
-    int x2; int y2;
-    int x3; int y3;
-} Quad;
+    int x;
+    int y;
+} IVec;
+typedef struct {
+    float x;
+    float y;
+    float z;
+} FVec;
+
+typedef IVec IQuad[4];
+typedef FVec FQuad[4];
 
 typedef struct {
     int quadCount;

@@ -7,9 +7,9 @@ void clearScene(Scene* scene) {
     scene->quadCount = 0;
 }
 
-void appendToScene(Scene* scene, Quad quad) {
+void appendToScene(Scene* scene, IQuad quad) {
     int i = scene->quadCount * 4;
-    int* quadPtr = (int*)&quad;      // sick pointer stuff B4
+    int* quadPtr = (int*)quad;      // sick pointer stuff B4
                                     //                    ^ this is a dog with shades
 
     for (int j = 0; j < 4; j++) {
@@ -37,7 +37,10 @@ void drawThreeDee(Robot* robot, Maze* maze) {
     Scene scene;
     clearScene(&scene);
 
-    appendToScene(&scene, (Quad){0, 0, 50, 0, 50, 50, 0, 50});
+    IQuad testQuad = {
+        {0, 0}, {50, 0}, {50, 50}, {0, 50}
+    };
+    appendToScene(&scene, testQuad);
 
     drawScene(&scene);
 };
