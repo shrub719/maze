@@ -29,7 +29,7 @@ void clearArray(NeighbourArray* array) {
     array->size = 0;
 }
 
-void addArray(NeighbourArray* array, CellRef cell) {
+void appendToArray(NeighbourArray* array, CellRef cell) {
     if (array->size >= 4) {
         message("array overflow\n");
         return;
@@ -59,13 +59,13 @@ void populateArray(NeighbourArray* array, Maze* maze, CellRef cell) {
         CellRef nb = addCells(cell, offsets[i]);
         if (isCellValid(maze, nb)) {
             if (getCell(maze, nb) != 0) {
-                addArray(array, offsets[i]);
+                appendToArray(array, offsets[i]);
             }
         }
     }
 }
 
-CellRef chooseArray(NeighbourArray* array) {
+CellRef chooseFromArray(NeighbourArray* array) {
     if (array->size == 1) {
         return array->cells[0];
     }
@@ -92,7 +92,7 @@ void genMazeDFS(Maze* maze) {
             cell = popStack(&stack);
         } else {
             pushStack(&stack, cell);  
-            CellRef offset = chooseArray(&nbs);     // random unvisited neighbour
+            CellRef offset = chooseFromArray(&nbs);     // random unvisited neighbour
             CellRef step = {cell.x + offset.x/2, cell.y + offset.y/2};  // nicer way of doing this; TODO
             cell = addCells(cell, offset);
             setCell(maze, step, 0);
