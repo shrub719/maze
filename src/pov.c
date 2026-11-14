@@ -2,12 +2,15 @@
 #include "maze.h"
 #include "robot.h"
 #include "pov.h"
+#include <math.h>
 
 void clearScene(Scene* scene) {
     scene->quadCount = 0;
 }
 
 void appendQuadToScene(Scene* scene, Quad quad) {
+    if (scene->quadCount >= STACK) return;
+
     int i = scene->quadCount * 4;
     float* quadPtr = (float*)quad;      // sick pointer stuff B4
                                         //                    ^ this is a dog with shades
@@ -44,6 +47,62 @@ void appendWallToScene(Scene* scene, Wall wall) {
     appendQuadToScene(scene, quad);
 }
 
+Vec rotateVectorDegrees(Vec v, int d) {
+    double a = (double)d / 180.0 * M_PI;
+    double c = cos(a);
+    double s = sin(a);
+    Vec result;
+
+    result.x = (float)(c*v.x - s*v.y);
+    result.y = (float)(s*v.x + c*v.y);
+    
+    return result;
+}
+
+Vec calculateViewVector(Vec pos, Robot* robot) {
+    Vec differenceVector = {
+        pos.x - (float)robot->pos.x,
+        pos.y - (float)robot->pos.y
+    };
+
+    int angle = -90 * robot->dir;
+
+    return rotateVectorDegrees(differenceVector, angle);
+}
+
+Edge calculateEdge(Vec v) {
+    Edge edge;
+
+    float distance = (float)(sqrt(v.x*v.x + v.y*v.y));
+    edge.height = POV_EDGE_HEIGHT / distance;
+    edge.x = (v.x + POV_X_RANGE) / (POV_X_RANGE * 2);
+
+    return edge;
+}
+
+void populateScene(Scene* scene, Robot* robot, Maze* maze) {
+    int width = maze->width;
+    for (int i = 0; i < width; i++) {
+        for (int j = 0; j < maze->height; j++) { 
+            Cell cell = maze->cells[j*width + i];
+            if (cell == WALL) {
+                Edge edges[4];
+                for (int k = 0; k < 4; k++) {
+                    Vec pos = {
+                        (float)i - 0.5 + (float)((int)(k / 2)) * 1.0,
+                        (float)j - 0.5 + (float)(k % 2) * 1.0
+                    };
+                    Vec viewVector = calculateViewVector(pos, robot);
+                    edges[k] = calculateEdge(viewVector);
+                }
+
+                Wall wall = {edges[0], edges[1]};
+                appendWallToScene(scene, wall);
+            }
+        }
+    }
+}
+
 void drawScene(Scene* scene) {
     setColour(gray);
     for (int i = 0; i < scene->quadCount; i++) {
@@ -60,7 +119,10 @@ void drawThreeDee(Robot* robot, Maze* maze) {
 
     Scene scene;
     clearScene(&scene);
+    populateScene(&scene, robot, maze); // segfault HERE! TODO
+    drawScene(&scene);
 
+    /*
     Quad testQuad = {
         {0, 0}, {50, 0}, {50, 50}, {0, 50}
     };
@@ -72,5 +134,6 @@ void drawThreeDee(Robot* robot, Maze* maze) {
     appendWallToScene(&scene, testWall);
 
     drawScene(&scene);
+    */
 };
 
