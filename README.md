@@ -8,13 +8,10 @@ TODO
 
 ## Requirements
 
-In order to build and run the program, you will need to put the "drawing app files" in
-`src/include/`. This includes:
-- `graphics.c`
-- `graphics.h`
-- `drawapp-5.0`
+In order to build and run the program, you will need to put the "drawing app files"
+(`graphics.c` and `graphics.h`) in `src/include/`.
 
-You will also need Java 21 or later.
+You also need `drawapp-5.0.jar` with Java 21 or later.
 
 ## Building
 
@@ -24,9 +21,22 @@ From the root directory, build the program with
 gcc ./src/*.c ./src/include/*.c -o maze
 ```
 
-Run the program with
+ensuring `graphics.c` and `graphics.h` are in the correct location.
+
+## Usage
+
+Run the program and pipe it into Draw App with
 
 ```bash
-./maze | java -jar ./src/include/drawapp-5.0.jar
+./maze [args] | java -jar ./drawapp-5.0.jar
 ```
+
+### Arguments
+
+- `--pov`  
+    Run the program in a 3D view from the perspective of the robot.
+- `--seed [int]`  
+    Set a seed for maze generation.
+- `--speed [float]`
+    Set a speed multiplier for animation.
 

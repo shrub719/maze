@@ -29,9 +29,10 @@ typedef struct {
     float aDir;     // animated/interpolated
     // AnimationLevel anim;
     DrawMode mode;
+    float speed;
 } Robot;
 
-void initRobot(Robot* robot, DrawMode mode);
+void initRobot(Robot* robot, DrawMode mode, float speed);
 void drawRobot(Robot* robot, Maze* maze);
 void right(Robot* robot, Maze* maze);
 void left(Robot* robot, Maze* maze);

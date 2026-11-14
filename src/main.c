@@ -10,9 +10,21 @@ int main(int argc, char** argv) {
     displayImageURL("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.scHvyIKsLexn0eOtLY4PQwAAAA%3Fr%3D0%26pid%3DApi&f=1&ipt=0877f0748ce0d2c32f1483db716648655d0f364d8d4a46f7d7235682cc741b40&ipo=images", 0, 0);
 
     DrawMode mode = TWODEE;
-    if (argc > 1 && strcmp(argv[1], "--3d") == 0) mode = THREEDEE;
+    int seed = time(NULL);
+    float speed = 1.0;
 
-    srand(time(NULL));
+    // #noRobustnessCheck #thugLife
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--pov") == 0) {
+            mode = THREEDEE;
+        } else if (strcmp(argv[i], "--seed") == 0) {
+            seed = atoi(argv[i+1]);
+        } else if (strcmp(argv[i], "--speed") == 0) {
+            speed = atof(argv[i+1]);
+        }
+    }
+
+    srand(seed);
     setWindowSize(SIZE*WIDTH, SIZE*HEIGHT);
 
     Maze maze;
@@ -24,7 +36,7 @@ int main(int argc, char** argv) {
     if (mode == THREEDEE) sleep(1000);
 
     Robot robot;
-    initRobot(&robot, mode);
+    initRobot(&robot, mode, speed);
     drawRobot(&robot, &maze);
 
     solveMazeHug(&robot, &maze);

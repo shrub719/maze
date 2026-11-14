@@ -5,7 +5,7 @@ static const int WIDTH = 25;
 static const int HEIGHT = 19;
 
 static const float STEP = 100;
-static const float FPS = 15;   // frames per step :)
+static const float FPS = 12;   // frames per step :)
 static const int SLEEP = (int)(STEP / FPS);
 
 static const float POV_WIDTH = 600.0;

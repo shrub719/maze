@@ -17,7 +17,7 @@ static const int directionalOffsets[] = {
     -1, 0
 };
 
-void initRobot(Robot* robot, DrawMode mode) {
+void initRobot(Robot* robot, DrawMode mode, float speed) {
     robot->pos.x = 0;
     robot->pos.y = 1;
     robot->aPos.x = 0.0;
@@ -25,6 +25,7 @@ void initRobot(Robot* robot, DrawMode mode) {
     robot->dir = EAST;
     robot->aDir = 1.0;
     robot->mode = mode;
+    robot->speed = speed;
 }
 
 void drawRobot(Robot* robot, Maze* maze) {
@@ -75,7 +76,7 @@ void turn(Robot* robot, Maze* maze, int amount) {
     for (int i = 0; i <= FPS; i++) {
         robot->aDir += (float)amount / FPS;
         drawRobot(robot, maze);
-        sleep(SLEEP); 
+        sleep(SLEEP / robot->speed); 
     }
 
     robot->aDir = (float)newDir;
@@ -100,7 +101,7 @@ void forward(Robot* robot, Maze* maze) {
         float f = (float)i / FPS;
         robot->aPos = interpolateForwardCell(robot, f);
         drawRobot(robot, maze);
-        sleep(SLEEP);
+        sleep(SLEEP / robot->speed);
     }
 
     CellRef forwardCell = getForwardCell(robot);
