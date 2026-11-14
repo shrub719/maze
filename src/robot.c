@@ -20,8 +20,10 @@ static const int directionalOffsets[] = {
 void initRobot(Robot* robot, DrawMode mode) {
     robot->pos.x = 0;
     robot->pos.y = 1;
+    robot->aPos.x = 0.0;
+    robot->aPos.y = 1.0;
     robot->dir = EAST;
-    robot->anim = STEPS;
+    robot->aDir = 1.0;
     robot->mode = mode;
 }
 
@@ -50,14 +52,33 @@ CellRef getForwardCell(Robot* robot) {
     );
 }
 
+Vec interpolateForwardCell(Robot* robot, float f) {
+    int i = 2*robot->dir;
+    return (Vec){
+        (float)robot->pos.x + f*(float)directionalOffsets[i],
+        (float)robot->pos.y + f*(float)directionalOffsets[i+1]
+    };
+}
+
+void turn(Robot* robot, Maze* maze, int amount) {
+    for (int i = 0; i <= FPS; i++) {
+        robot->aDir += (float)amount / FPS;
+        //drawRobot(robot, maze);
+        sleep(SLEEP); 
+    }
+
+    Direction newDir = (robot->dir + amount) % 4;
+    robot->aDir = (float)newDir;
+    //drawRobot(robot, maze);
+    robot->dir = newDir;
+}
+
 void right(Robot* robot, Maze* maze) {
-    robot->dir = (robot->dir + 1) % 4;
-    if (robot->anim >= TURNS) advanceRobot(robot, maze);
+    turn(robot, maze, 1);
 }
 
 void left(Robot* robot, Maze* maze) {
-    robot->dir = (robot->dir + 3) % 4;
-    if (robot->anim >= TURNS) advanceRobot(robot, maze);
+    turn(robot, maze, -1);
 }
 
 // does not check
@@ -67,8 +88,19 @@ void forward(Robot* robot, Maze* maze) {
         return;
     }
 
-    robot->pos = getForwardCell(robot);
-    if (robot->anim >= STEPS) advanceRobot(robot, maze);
+    for (int i = 0; i <= FPS; i++) {
+        float f = (float)i / FPS;
+        robot->aPos = interpolateForwardCell(robot, f);
+        drawRobot(robot, maze);
+        sleep(SLEEP);
+    }
+
+    CellRef forwardCell = getForwardCell(robot);
+    robot->aPos.x = (float)forwardCell.x;
+    robot->aPos.y = (float)forwardCell.y;
+    // (Vec)(forwardCell)???
+    robot->pos = forwardCell;
+    drawRobot(robot, maze);
 }
 
 int atMarker(Robot* robot, Maze* maze) {
@@ -77,10 +109,5 @@ int atMarker(Robot* robot, Maze* maze) {
 
 int canMoveForward(Robot* robot, Maze* maze) {
     return (getCell(maze, getForwardCell(robot)) != WALL);
-}
-
-void advanceRobot(Robot* robot, Maze* maze) {
-    drawRobot(robot, maze);
-    sleep(SLEEP);
 }
 

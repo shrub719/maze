@@ -61,11 +61,11 @@ Vec rotateVectorDegrees(Vec v, int d) {
 
 Vec calculateViewVector(Vec pos, Robot* robot) {
     Vec differenceVector = {
-        pos.x - (float)robot->pos.x,
-        pos.y - (float)robot->pos.y
+        pos.x - (float)robot->aPos.x,
+        pos.y - (float)robot->aPos.y
     };
 
-    int angle = -90 * robot->dir;
+    int angle = -90 * robot->aDir;
 
     return rotateVectorDegrees(differenceVector, angle);
 }

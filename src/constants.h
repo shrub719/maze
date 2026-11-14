@@ -4,7 +4,10 @@ static const int SIZE = 25;
 static const int WIDTH = 25;
 static const int HEIGHT = 19;
 
-static const int SLEEP = 300;
+static const float STEP = 100;
+static const float FPS = 15;   // frames per step :)
+static const int SLEEP = (int)(STEP / FPS);
 
+static const float WALL_HEIGHT = 0.45;
 static const float FOV = 0.8;
 

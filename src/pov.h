@@ -1,10 +1,12 @@
 #pragma once
 
+/*
 typedef struct {
     // sometimes in grid units; sometimes in pixel coords
     float x;
     float y;
 } Vec;
+*/
 typedef Vec Quad[4];
 
 typedef struct {
