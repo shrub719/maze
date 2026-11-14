@@ -54,7 +54,7 @@ Vec rotateVectorDegrees(Vec v, int d) {
     Vec result;
 
     result.x = (float)(c*v.x - s*v.y);
-    result.y = (float)(s*v.x + c*v.y);
+    result.y = -(float)(s*v.x + c*v.y);
     
     return result;
 }
@@ -71,11 +71,11 @@ Vec calculateViewVector(Vec pos, Robot* robot) {
 }
 
 Edge calculateEdge(Vec v) {
+    if (v.y < 0.0) return (Edge){0.0, 0.0};
+
     Edge edge;
-
-    edge.height = POV_EDGE_HEIGHT / v.y;
-
-    edge.x = ((v.x / (v.y / POV_FOV)) + POV_FOV) / (POV_FOV * 2);
+    edge.height = 0.5 / v.y;
+    edge.x = (v.x / v.y * FOV + 1.0) / 2.0;
 
     return edge;
 }
@@ -87,6 +87,7 @@ void populateScene(Scene* scene, Robot* robot, Maze* maze) {
         for (int j = 0; j < height; j++) { 
             Cell cell = getCell(maze, (CellRef){i, j});
             if (cell == WALL) {
+                int pushWall = 1;
                 Edge edges[4];
                 for (int k = 0; k < 4; k++) {
                     Vec pos = {
@@ -94,9 +95,12 @@ void populateScene(Scene* scene, Robot* robot, Maze* maze) {
                         (float)j - 0.5 + (float)(k % 2) * 1.0
                     };
                     Vec viewVector = calculateViewVector(pos, robot);
+                    Edge edge = calculateEdge(viewVector);
+                    if (edge.height == 0.0) pushWall = 0;
                     edges[k] = calculateEdge(viewVector);
                 }
 
+                if (!pushWall) continue;
                 int walls[] = {
                     0, 1,
                     1, 3,
