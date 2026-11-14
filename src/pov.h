@@ -16,8 +16,8 @@ typedef Edge Wall[2];
 
 typedef struct {
     int quadCount;
-    int x[STACK];
-    int y[STACK];
+    int x[STACK*4];
+    int y[STACK*4];
 } Scene;
 
 void drawThreeDee(Robot* robot, Maze* maze);
@@ -31,3 +31,4 @@ void drawThreeDee(Robot* robot, Maze* maze);
 //   - for every pairwise wall combination:
 //     - test if Wall is in pov (clipping?) <- not necessary!
 //     - add Wall to Scene
+

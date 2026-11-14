@@ -85,12 +85,7 @@ void populateScene(Scene* scene, Robot* robot, Maze* maze) {
     int height = maze->height;
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) { 
-            printf("accessing %d %d\n", i, j);
-            fflush(stdout);
-            // what ze fuck
             Cell cell = getCell(maze, (CellRef){i, j});
-            printf("accessed\n");
-            fflush(stdout);
             if (cell == WALL) {
                 Edge edges[4];
                 for (int k = 0; k < 4; k++) {
@@ -102,8 +97,16 @@ void populateScene(Scene* scene, Robot* robot, Maze* maze) {
                     edges[k] = calculateEdge(viewVector);
                 }
 
-                Wall wall = {edges[0], edges[1]};
-                appendWallToScene(scene, wall);
+                int walls[] = {
+                    0, 1,
+                    1, 3,
+                    3, 2,
+                    2, 0
+                };
+                for (int k = 0; k < 4; k++) {
+                    Wall wall = {edges[walls[2*k]], edges[walls[2*k + 1]]};
+                    appendWallToScene(scene, wall);
+                }
             }
         }
     }
