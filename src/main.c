@@ -4,6 +4,7 @@
 #include "robot.h"
 #include "solve.h"
 #include <string.h>
+#include <time.h>
 
 int main(int argc, char** argv) {
     displayImageURL("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.scHvyIKsLexn0eOtLY4PQwAAAA%3Fr%3D0%26pid%3DApi&f=1&ipt=0877f0748ce0d2c32f1483db716648655d0f364d8d4a46f7d7235682cc741b40&ipo=images", 0, 0);
@@ -11,7 +12,7 @@ int main(int argc, char** argv) {
     DrawMode mode = TWODEE;
     if (argc > 1 && strcmp(argv[1], "--3d") == 0) mode = THREEDEE;
 
-    srand(0);
+    srand(time(NULL));
     setWindowSize(SIZE*WIDTH, SIZE*HEIGHT);
 
     Maze maze;
@@ -20,6 +21,7 @@ int main(int argc, char** argv) {
     clear();
     genMazeDFS(&maze);
     drawMaze(&maze);
+    if (mode == THREEDEE) sleep(1000);
 
     Robot robot;
     initRobot(&robot, mode);
