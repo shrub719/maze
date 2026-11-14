@@ -6,5 +6,5 @@ static const int HEIGHT = 19;
 
 static const int SLEEP = 400;
 
-static const float FOV = 1.0;
+static const float FOV = 0.8;
 

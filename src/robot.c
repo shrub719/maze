@@ -21,7 +21,7 @@ void initRobot(Robot* robot, DrawMode mode) {
     robot->pos.x = 0;
     robot->pos.y = 1;
     robot->dir = EAST;
-    robot->anim = TURNS;
+    robot->anim = STEPS;
     robot->mode = mode;
 }
 
