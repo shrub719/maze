@@ -4,7 +4,12 @@ Maze program for my Principles of Programming coursework.
 
 ## Description
 
-TODO
+Maze is a program which generates a maze and lets a robot with limited
+capabilities and perception solve it using different algorithms.
+
+The program can be configured via the command line to run different
+generation and solving algorithms, as well as viewing the maze
+solution from the perspective of the robot.
 
 ## Requirements
 
@@ -37,6 +42,6 @@ Run the program and pipe it into Draw App with
     Run the program in a 3D view from the perspective of the robot.
 - `--seed [int]`  
     Set a seed for maze generation.
-- `--speed [float]`
+- `--speed [float]`  
     Set a speed multiplier for animation.
 
