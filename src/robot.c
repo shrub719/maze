@@ -29,8 +29,8 @@ void initRobot(Robot* robot, DrawMode mode) {
 
 void drawRobot(Robot* robot, Maze* maze) {
     if (robot->mode == TWODEE) {
-        int x = SIZE*robot->pos.x;
-        int y = SIZE*robot->pos.y;
+        float x = SIZE*robot->aPos.x;
+        float y = SIZE*robot->aPos.y;
         int i = 2*robot->dir;
 
         foreground();
@@ -63,13 +63,13 @@ Vec interpolateForwardCell(Robot* robot, float f) {
 void turn(Robot* robot, Maze* maze, int amount) {
     for (int i = 0; i <= FPS; i++) {
         robot->aDir += (float)amount / FPS;
-        //drawRobot(robot, maze);
+        drawRobot(robot, maze);
         sleep(SLEEP); 
     }
 
     Direction newDir = (robot->dir + amount) % 4;
     robot->aDir = (float)newDir;
-    //drawRobot(robot, maze);
+    drawRobot(robot, maze);
     robot->dir = newDir;
 }
 
