@@ -88,7 +88,10 @@ void genMazeDFS(Maze* maze) {
     while (cont) {
         populateArray(&nbs, maze, cell);    // get list of neighbours
         if (nbs.size == 0) {
-            if (cell.x == 1 && cell.y == 1) cont = 0;
+            if (cell.x == 1 && cell.y == 1) {
+                cont = 0;
+                continue;
+            }
             cell = popStack(&stack);
         } else {
             pushStack(&stack, cell);  
