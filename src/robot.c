@@ -17,12 +17,12 @@ static const int directionalOffsets[] = {
     -1, 0
 };
 
-void initRobot(Robot* robot) {
+void initRobot(Robot* robot, DrawMode mode) {
     robot->pos.x = 0;
     robot->pos.y = 1;
     robot->dir = EAST;
     robot->anim = STEPS;
-    robot->mode = THREEDEE;
+    robot->mode = mode;
 }
 
 void drawRobot(Robot* robot, Maze* maze) {

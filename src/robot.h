@@ -20,7 +20,7 @@ typedef struct {
     DrawMode mode;
 } Robot;
 
-void initRobot(Robot* robot);
+void initRobot(Robot* robot, DrawMode mode);
 void drawRobot(Robot* robot, Maze* maze);
 void right(Robot* robot, Maze* maze);
 void left(Robot* robot, Maze* maze);
