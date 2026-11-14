@@ -29,5 +29,5 @@ void drawThreeDee(Robot* robot, Maze* maze);
 //     - rotate difference vector so that forward facing is (0, 1) direction
 //     - turn difference vector into an Edge with Maths
 //   - for every pairwise wall combination:
-//     - test if Wall is in pov (clipping?)
+//     - test if Wall is in pov (clipping?) <- not necessary!
 //     - add Wall to Scene

@@ -67,7 +67,7 @@ void drawThreeDee(Robot* robot, Maze* maze) {
     appendQuadToScene(&scene, testQuad);
 
     Wall testWall = {
-        {0.0, 0.5}, {0.5, 0.8}
+        {-1.0, 0.5}, {0.5, 0.8}
     };
     appendWallToScene(&scene, testWall);
 
