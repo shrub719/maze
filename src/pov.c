@@ -71,10 +71,11 @@ Vec calculateViewVector(Vec pos, Robot* robot) {
 }
 
 Edge calculateEdge(Vec v) {
-    if (v.y < 0.0) return (Edge){0.0, 0.0};
+    if (v.y < -0.5) return (Edge){0.0, 0.0};
+    if (v.y < 0.1) v.y = 0.1;
 
     Edge edge;
-    edge.height = 0.5 / v.y;
+    edge.height = WALL_HEIGHT / v.y;
     edge.x = (v.x / v.y * FOV + 1.0) / 2.0;
 
     return edge;
