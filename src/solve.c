@@ -3,6 +3,7 @@
 #include "robot.h"
 #include "solve.h"
 
+/*
 void solveMazeHug(Robot* robot, Maze* maze) {
     int checked = 0;
     while (!atMarker(robot, maze)) {
@@ -14,6 +15,20 @@ void solveMazeHug(Robot* robot, Maze* maze) {
         } else {
             right(robot, maze);
             checked = 1;
+        }
+    }
+}
+*/
+
+void solveMazeHug(Robot* robot, Maze* maze) {
+    while (!atMarker(robot, maze)) {
+        if (canMoveLeft(robot, maze)) {
+            left(robot, maze);
+            forward(robot, maze);
+        } else if (canMoveForward(robot, maze)) {
+            forward(robot, maze);
+        } else {
+            right(robot, maze);
         }
     }
 }

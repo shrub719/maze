@@ -38,5 +38,6 @@ void left(Robot* robot, Maze* maze);
 void forward(Robot* robot, Maze* maze);
 int atMarker(Robot* robot, Maze* maze);
 int canMoveForward(Robot* robot, Maze* maze);
-void advanceRobot(Robot* robot, Maze* maze);
+int canMoveLeft(Robot* robot, Maze* maze);
+int canMoveRight(Robot* robot, Maze* maze);
 

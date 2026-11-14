@@ -52,6 +52,14 @@ CellRef getForwardCell(Robot* robot) {
     );
 }
 
+CellRef getTurnedCell(Robot* robot, int amount) {
+    int i = 2*((robot->dir + amount) % 4);
+    return addCells(
+        robot->pos,
+        (CellRef){directionalOffsets[i], directionalOffsets[i+1]}
+    );
+}
+
 Vec interpolateForwardCell(Robot* robot, float f) {
     int i = 2*robot->dir;
     return (Vec){
@@ -61,16 +69,17 @@ Vec interpolateForwardCell(Robot* robot, float f) {
 }
 
 void turn(Robot* robot, Maze* maze, int amount) {
+    Direction newDir = (robot->dir + amount) % 4;
+    robot->dir = newDir;
+
     for (int i = 0; i <= FPS; i++) {
         robot->aDir += (float)amount / FPS;
         drawRobot(robot, maze);
         sleep(SLEEP); 
     }
 
-    Direction newDir = (robot->dir + amount) % 4;
     robot->aDir = (float)newDir;
     drawRobot(robot, maze);
-    robot->dir = newDir;
 }
 
 void right(Robot* robot, Maze* maze) {
@@ -81,7 +90,6 @@ void left(Robot* robot, Maze* maze) {
     turn(robot, maze, -1);
 }
 
-// does not check
 void forward(Robot* robot, Maze* maze) {
     if (!canMoveForward(robot, maze)) {
         message("cannot move forward\n");
@@ -109,5 +117,13 @@ int atMarker(Robot* robot, Maze* maze) {
 
 int canMoveForward(Robot* robot, Maze* maze) {
     return (getCell(maze, getForwardCell(robot)) != WALL);
+}
+
+int canMoveRight(Robot* robot, Maze* maze) {
+    return (getCell(maze, getTurnedCell(robot, 1)) != WALL);
+}
+
+int canMoveLeft(Robot* robot, Maze* maze) {
+    return (getCell(maze, getTurnedCell(robot, -1)) != WALL);
 }
 
