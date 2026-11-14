@@ -82,9 +82,15 @@ Edge calculateEdge(Vec v) {
 
 void populateScene(Scene* scene, Robot* robot, Maze* maze) {
     int width = maze->width;
+    int height = maze->height;
     for (int i = 0; i < width; i++) {
-        for (int j = 0; j < maze->height; j++) { 
-            Cell cell = maze->cells[j*width + i];
+        for (int j = 0; j < height; j++) { 
+            printf("accessing %d %d\n", i, j);
+            fflush(stdout);
+            // what ze fuck
+            Cell cell = getCell(maze, (CellRef){i, j});
+            printf("accessed\n");
+            fflush(stdout);
             if (cell == WALL) {
                 Edge edges[4];
                 for (int k = 0; k < 4; k++) {
@@ -119,7 +125,7 @@ void drawThreeDee(Robot* robot, Maze* maze) {
 
     Scene scene;
     clearScene(&scene);
-    populateScene(&scene, robot, maze); // segfault HERE! TODO
+    populateScene(&scene, robot, maze);
     drawScene(&scene);
 
     /*
