@@ -35,3 +35,6 @@ void drawThreeDee(Robot* robot, Maze* maze);
 // issues:
 // - parallel projection
 // - don't draw walls behind you
+//
+// TODO:
+// - SLEEP speed from command line
