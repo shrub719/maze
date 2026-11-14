@@ -2,7 +2,6 @@
 #include <time.h>
 #include "maze.h"
 
-// TODO: add checks to these
 Cell getCell(Maze* maze, CellRef cell) {
     int i = cell.y * maze->width + cell.x;
     if (i >= maze->width * maze->height || i < 0) return -1;
