@@ -117,7 +117,7 @@ void populateScene(Scene* scene, Robot* robot, Maze* maze) {
 }
 
 void drawScene(Scene* scene) {
-    setColour(gray);
+    setColour(black);
     for (int i = 0; i < scene->quadCount; i++) {
         fillPolygon(4, &scene->x[i*4], &scene->y[i*4]);
     }
