@@ -73,9 +73,9 @@ Vec calculateViewVector(Vec pos, Robot* robot) {
 Edge calculateEdge(Vec v) {
     Edge edge;
 
-    float distance = (float)(sqrt(v.x*v.x + v.y*v.y));
-    edge.height = POV_EDGE_HEIGHT / distance;
-    edge.x = (v.x + POV_X_RANGE) / (POV_X_RANGE * 2);
+    edge.height = POV_EDGE_HEIGHT / v.y;
+
+    edge.x = ((v.x / (v.y / POV_FOV)) + POV_FOV) / (POV_FOV * 2);
 
     return edge;
 }

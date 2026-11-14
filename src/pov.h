@@ -32,3 +32,6 @@ void drawThreeDee(Robot* robot, Maze* maze);
 //     - test if Wall is in pov (clipping?) <- not necessary!
 //     - add Wall to Scene
 
+// issues:
+// - parallel projection
+// - don't draw walls behind you
