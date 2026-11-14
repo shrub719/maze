@@ -29,10 +29,10 @@ void appendWallToScene(Scene* scene, Wall wall) {
     for (int i = 0; i < 2; i++) {
         Vec v1;
         Vec v2;
-        v1.x = 600.0 * wall[i].x;
+        v1.x = POV_WIDTH * wall[i].x;
         v2.x = v1.x;
-        v1.y = 200.0 * (1 + wall[i].height);
-        v2.y = 200.0 * (1 - wall[i].height);
+        v1.y = POV_HEIGHT/2.0 * (1 + wall[i].height);
+        v2.y = POV_HEIGHT/2.0 * (1 - wall[i].height);
         
         // surely there's a clever way TODO this
         if (i == 0) {
@@ -126,9 +126,9 @@ void drawScene(Scene* scene) {
 void drawThreeDee(Robot* robot, Maze* maze) {
     foreground();
     clear();
-    setWindowSize(600, 400);
+    setWindowSize((int)POV_WIDTH, (int)POV_HEIGHT);
     setColour(lightgray);
-    fillRect(0, 200, 600, 400);
+    fillRect(0, 200, (int)POV_WIDTH, (int)POV_HEIGHT);
 
     Scene scene;
     clearScene(&scene);
