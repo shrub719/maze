@@ -16,7 +16,7 @@ void appendQuadToScene(Scene* scene, Quad quad) {
                                         //                    ^ this is a dog with shades
 
     for (int j = 0; j < 4; j++) {
-        scene->x[i + j] = (int)quadPtr[2*j];
+        scene->x[i + j] = (int)quadPtr[2*j] + SIZE*WIDTH;
         scene->y[i + j] = (int)quadPtr[2*j + 1];
     }
 
@@ -126,10 +126,8 @@ void drawScene(Scene* scene) {
 
 void drawThreeDee(Robot* robot, Maze* maze) {
     foreground();
-    clear();
-    setWindowSize((int)POV_WIDTH, (int)POV_HEIGHT);
     setColour(lightgray);
-    fillRect(0, 200, (int)POV_WIDTH, (int)POV_HEIGHT);
+    fillRect(0+SIZE*WIDTH, (int)(POV_HEIGHT/2), (int)POV_WIDTH+SIZE*WIDTH, (int)POV_HEIGHT);
 
     Scene scene;
     clearScene(&scene);

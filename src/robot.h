@@ -18,9 +18,11 @@ typedef enum {
 } AnimationLevel;
 */
 
+/*
 typedef enum {
     TWODEE = 0, THREEDEE
 } DrawMode;
+*/
 
 typedef struct {
     CellRef pos;
@@ -28,10 +30,10 @@ typedef struct {
     Direction dir;
     float aDir;     // animated/interpolated
     // AnimationLevel anim;
-    DrawMode mode;
+    // DrawMode mode;
 } Robot;
 
-void initRobot(Robot* robot, DrawMode mode);
+void initRobot(Robot* robot);
 void drawRobot(Robot* robot, Maze* maze);
 void right(Robot* robot, Maze* maze);
 void left(Robot* robot, Maze* maze);

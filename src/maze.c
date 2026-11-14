@@ -54,6 +54,8 @@ void uninitMaze(Maze* maze) {
 
 void drawMaze(Maze* maze) {
     background();
+    setColour(white);
+    fillRect(0, 0, SIZE*WIDTH, SIZE*HEIGHT);
     for (int i = 0; i < maze->width; i++)  {
         for (int j = 0; j < maze->height; j++) {
             drawCell(maze, (CellRef){i, j});

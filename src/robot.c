@@ -17,31 +17,31 @@ static const int directionalOffsets[] = {
     -1, 0
 };
 
-void initRobot(Robot* robot, DrawMode mode) {
+void initRobot(Robot* robot) {
     robot->pos.x = 0;
     robot->pos.y = 1;
     robot->aPos.x = 0.0;
     robot->aPos.y = 1.0;
     robot->dir = EAST;
     robot->aDir = 1.0;
-    robot->mode = mode;
 }
 
 void drawRobot(Robot* robot, Maze* maze) {
-    if (robot->mode == TWODEE) {
-        float x = SIZE*robot->aPos.x;
-        float y = SIZE*robot->aPos.y;
-        int i = 2*robot->dir;
+    float x = SIZE*robot->aPos.x;
+    float y = SIZE*robot->aPos.y;
+    int i = 2*robot->dir;
 
-        foreground();
-        clear();
-        setColour(darkgray);
-        fillOval(x+1, y+1, 21, 21);
-        setColour(red);
-        fillOval(x+circleOffsets[i], y+circleOffsets[i+1], 12, 12);
-    } else if (robot->mode == THREEDEE) {
-        drawThreeDee(robot, maze);
-    }
+    clear();
+
+    drawThreeDee(robot, maze);
+
+    drawMaze(maze);
+
+    foreground();
+    setColour(darkgray);
+    fillOval(x+1, y+1, 21, 21);
+    setColour(red);
+    fillOval(x+circleOffsets[i], y+circleOffsets[i+1], 12, 12);
 }
 
 CellRef getForwardCell(Robot* robot) {
