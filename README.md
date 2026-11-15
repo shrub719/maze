@@ -40,6 +40,7 @@ Run the program and pipe it into Draw App with
 
 - `--gen [algorithm]`
     Choose a maze generation algorithm. One of:
+    - `prim`: Randomised Prim's algorithm
     - `dfs`: Randomised Depth First Search
 - `--solve [algorithm]`
     Choose a maze solving algorithm. One of:

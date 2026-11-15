@@ -25,12 +25,12 @@ CellRef popStack(CellStack* stack) {
 }
 
 
-void clearArray(NeighbourArray* array) {
+void clearArray(CellArray* array) {
     array->size = 0;
 }
 
-void appendToArray(NeighbourArray* array, CellRef cell) {
-    if (array->size >= 4) {
+void appendToArray(CellArray* array, CellRef cell) {
+    if (array->size >= STACK) {
         message("array overflow\n");
         return;
     }
@@ -47,9 +47,7 @@ int isCellValid(Maze* maze, CellRef cell) {
 
 // TODO: the offsets are always the same. maybe just have it return a quadruplet
 // of bools?
-void populateArray(NeighbourArray* array, Maze* maze, CellRef cell) {
-    clearArray(array);
-
+void populateNeighbourArray(CellArray* array, Maze* maze, CellRef cell) {
     CellRef offsets[4] = {
         {2, 0}, {-2, 0},
         {0, 2}, {0, -2}
@@ -65,19 +63,38 @@ void populateArray(NeighbourArray* array, Maze* maze, CellRef cell) {
     }
 }
 
-CellRef chooseFromArray(NeighbourArray* array) {
-    if (array->size == 1) {
-        return array->cells[0];
-    }
+int randomIndex(int size) {
+    if (size == 1) return 0;
+    return rand() % size;
+}
 
-    int c = rand() % array->size;
-    return array->cells[c];
+CellRef chooseFromArray(CellArray* array) {
+    return array->cells[randomIndex(array->size)];
+}
+
+CellRef chooseAndPopFromArray(CellArray* array) {
+    if (array->size == 0) return (CellRef){-1, -1}; // TODO bad
+
+    int i = randomIndex(array->size);
+    CellRef c = array->cells[i];
+
+    /* 
+    // i was really proud of this but its O(n) for no reason
+    for (int j = i + 1; j < array->size; j++) {
+        array->cells[j - 1] = array->cells[j];
+    }
+    */
+
+    array->cells[i] = array->cells[array->size - 1];
+    array->size--;
+
+    return c;
 }
 
 void genMazeDFS(Maze* maze) {
     CellStack stack;
     initStack(&stack);
-    NeighbourArray nbs;
+    CellArray nbs;
     CellRef cell;
 
     cell.x = 1;
@@ -86,7 +103,8 @@ void genMazeDFS(Maze* maze) {
 
     int cont = 1;
     while (cont) {
-        populateArray(&nbs, maze, cell);    // get list of neighbours
+        clearArray(&nbs);
+        populateNeighbourArray(&nbs, maze, cell);    // get list of neighbours
         if (nbs.size == 0) {
             if (cell.x == 1 && cell.y == 1) {
                 cont = 0;
@@ -106,5 +124,20 @@ void genMazeDFS(Maze* maze) {
 
     setCell(maze, (CellRef){0, 1}, 0);
     setCell(maze, (CellRef){maze->width-1, maze->height-2}, 2);
+}
+
+void genMazePrim(Maze* maze) {
+    CellArray walls;
+    CellRef cell;
+    CellArray cells;
+    CellRef wall;
+    cell.x = 1;
+    cell.y = 1;
+    setCell(maze, cell, 0);
+    populateNeighbourArray(&walls, maze, cell);
+
+    while (walls.size > 0) {
+        // TODO 
+    }
 }
 

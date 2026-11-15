@@ -1,18 +1,19 @@
 #pragma once
 
 typedef struct {
-    CellRef cells[4];
-    int size;
-} NeighbourArray;
-
-typedef struct {
     CellRef cells[STACK];
     int size;
 } CellStack;
 
+typedef struct {
+    CellRef cells[STACK];
+    int size;
+} CellArray;
+
 typedef enum {
-    RDFS
+    PRIM, DFS
 } GenAlg;
 
+void genMazePrim(Maze* maze);
 void genMazeDFS(Maze* maze);
 
