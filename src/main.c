@@ -12,8 +12,10 @@ int main(int argc, char** argv) {
     DrawMode mode = TWODEE;
     int seed = time(NULL);
     float speed = 1.0;
+    SolveAlg solve = HUG;
+    GenAlg gen = RDFS;
 
-    // #noRobustnessCheck #thugLife
+    // #noChecks #fragileProgramming
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--pov") == 0) {
             mode = THREEDEE;
@@ -21,6 +23,14 @@ int main(int argc, char** argv) {
             seed = atoi(argv[i+1]);
         } else if (strcmp(argv[i], "--speed") == 0) {
             speed = atof(argv[i+1]);
+        } else if (strcmp(argv[i], "--gen") == 0) {
+            // TODO
+        } else if (strcmp(argv[i], "--solve") == 0) {
+            if (strcmp(argv[i+1], "hugright") == 0) {
+                solve = HUGRIGHT;
+            } else if (strcmp(argv[i+1], "dfs") == 0) {
+                solve = DFS;
+            }
         }
     }
 
@@ -30,8 +40,11 @@ int main(int argc, char** argv) {
     Maze maze;
     initMaze(&maze, WIDTH, HEIGHT);
     
+    if (gen == RDFS) {
+        genMazeDFS(&maze);
+    }
+    
     clear();
-    genMazeDFS(&maze);
     drawMaze(&maze);
     if (mode == THREEDEE) sleep(1000);
 
@@ -39,7 +52,13 @@ int main(int argc, char** argv) {
     initRobot(&robot, mode, speed);
     drawRobot(&robot, &maze);
 
-    solveMazeHug(&robot, &maze);
+    if (solve == HUG) {
+        solveMazeHug(&robot, &maze);
+    } else if (solve == HUGRIGHT) {
+        solveMazeHugRight(&robot, &maze);
+    } else if (solve == DFS) {
+        solveMazeDFS(&robot, &maze);
+    }
 
     uninitMaze(&maze);
 

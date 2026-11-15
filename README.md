@@ -38,6 +38,14 @@ Run the program and pipe it into Draw App with
 
 ### Arguments
 
+- `--gen [algorithm]`
+    Choose a maze generation algorithm. One of:
+    - `dfs`: Randomised Depth First Search
+- `--solve [algorithm]`
+    Choose a maze solving algorithm. One of:
+    - `hug`: simple left wall hug
+    - `hugright`: ditto, but right wall
+    - `dfs`: Depth First Search
 - `--pov`  
     Run the program in a 3D view from the perspective of the robot.
 - `--seed [int]`  

@@ -1,13 +1,19 @@
 build:
     gcc -Wall ./src/*.c ./src/include/*.c -o maze -lm
+
+run:
+    ./maze | java -jar ./src/include/drawapp-5.0.jar
+
+run-pov:
+    ./maze --pov | java -jar ./src/include/drawapp-5.0.jar
     
 [parallel]
-run-both: run run-3d
+run-both: run run-pov
 
-test-2d: build run
+test: build run
 
 [default]
-test-3d: build run-3d
+test-pov: build run-pov
 
 test-both: build run-both
 

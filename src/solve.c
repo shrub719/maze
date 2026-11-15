@@ -33,3 +33,20 @@ void solveMazeHug(Robot* robot, Maze* maze) {
     }
 }
 
+void solveMazeHugRight(Robot* robot, Maze* maze) {
+    while (!atMarker(robot, maze)) {
+        if (canMoveRight(robot, maze)) {
+            right(robot, maze);
+            forward(robot, maze);
+        } else if (canMoveForward(robot, maze)) {
+            forward(robot, maze);
+        } else {
+            left(robot, maze);
+        }
+    }
+}
+
+void solveMazeDFS(Robot* robot, Maze* maze) {
+
+}
+

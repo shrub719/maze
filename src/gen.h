@@ -10,5 +10,9 @@ typedef struct {
     int size;
 } CellStack;
 
+typedef enum {
+    RDFS
+} GenAlg;
+
 void genMazeDFS(Maze* maze);
 
