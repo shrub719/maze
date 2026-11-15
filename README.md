@@ -32,7 +32,7 @@ ensuring `graphics.c` and `graphics.h` are in the correct location.
 
 Run the program and pipe it into Draw App with
 
-```bash
+```sh
 ./maze [args] | java -jar ./drawapp-5.0.jar
 ```
 
@@ -43,13 +43,18 @@ Run the program and pipe it into Draw App with
     - `dfs`: Randomised Depth First Search
 - `--solve [algorithm]`
     Choose a maze solving algorithm. One of:
-    - `hug`: simple left wall hug
+    - `hug`: simple left wall hug (DFS)
     - `hugright`: ditto, but right wall
-    - `dfs`: Depth First Search
+    - `random`: random mouse algorithm
 - `--pov`  
     Run the program in a 3D view from the perspective of the robot.
 - `--seed [int]`  
     Set a seed for maze generation.
 - `--speed [float]`  
     Set a speed multiplier for animation.
+
+> One of my favourite things to do is run
+> ```sh
+> ./maze --solve random --speed 10.0 | java -jar ./drawapp-5.0.jar 
+> ```
 

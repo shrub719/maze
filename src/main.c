@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
     int seed = time(NULL);
     float speed = 1.0;
     SolveAlg solve = HUG;
-    GenAlg gen = RDFS;
+    GenAlg gen = DFS;
 
     // #noChecks #fragileProgramming
     for (int i = 1; i < argc; i++) {
@@ -28,8 +28,8 @@ int main(int argc, char** argv) {
         } else if (strcmp(argv[i], "--solve") == 0) {
             if (strcmp(argv[i+1], "hugright") == 0) {
                 solve = HUGRIGHT;
-            } else if (strcmp(argv[i+1], "dfs") == 0) {
-                solve = DFS;
+            } else if (strcmp(argv[i+1], "random") == 0) {
+                solve = RANDOM;
             }
         }
     }
@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
     Maze maze;
     initMaze(&maze, WIDTH, HEIGHT);
     
-    if (gen == RDFS) {
+    if (gen == DFS) {
         genMazeDFS(&maze);
     }
     
@@ -56,8 +56,8 @@ int main(int argc, char** argv) {
         solveMazeHug(&robot, &maze);
     } else if (solve == HUGRIGHT) {
         solveMazeHugRight(&robot, &maze);
-    } else if (solve == DFS) {
-        solveMazeDFS(&robot, &maze);
+    } else if (solve == RANDOM) {
+        solveMazeRandom(&robot, &maze);
     }
 
     uninitMaze(&maze);

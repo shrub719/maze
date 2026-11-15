@@ -46,7 +46,23 @@ void solveMazeHugRight(Robot* robot, Maze* maze) {
     }
 }
 
-void solveMazeDFS(Robot* robot, Maze* maze) {
+void solveMazeRandom(Robot* robot, Maze* maze) {
+    while (!atMarker(robot, maze)) {
+        int l = canMoveLeft(robot, maze);
+        int f = canMoveForward(robot, maze);
+        int r = canMoveRight(robot, maze);
 
+        int c = rand() % 3;
+        if (!l && !f && !r) {
+            left(robot, maze);
+            left(robot, maze);
+        } else if (c == 0 && l) {
+            left(robot, maze);
+        } else if (c == 2 && r) {
+            right(robot, maze);
+        }
+
+        if (canMoveForward(robot, maze)) forward(robot, maze);
+    }
 }
 
