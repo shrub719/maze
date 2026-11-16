@@ -68,7 +68,6 @@ void populateWallArray(CellArray* array, Maze* maze, CellVec cell) {
         if (isCellValid(maze, passage)) {
             if (getCell(maze, w) == 1) {
                 appendToArray(array, w);
-                printf("added wall (%d, %d)\n", w.x, w.y);
             }
         }
     }
@@ -80,7 +79,6 @@ void populateDividedArray(CellArray* array, Maze* maze, CellVec cell) {
         if (isCellValid(maze, d)) {
             if (getCell(maze, d) == 0) {
                 CellVec unvisitedCell = addCellVecs(cell, offsets[(i + 2) % 4]);
-                printf("added cell (%d, %d)\n", unvisitedCell.x, unvisitedCell.y);
                 if (isCellValid(maze, unvisitedCell)) appendToArray(array, unvisitedCell);
             }
         }
