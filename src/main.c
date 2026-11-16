@@ -10,7 +10,7 @@
 int main(int argc, char** argv) {
     // uses unistd to check if it's being piped
     //   decides which print function to use
-    if (strcmp(argv[1], "--help") == 0) {
+    if (argc > 1 && strcmp(argv[1], "--help") == 0) {
         if (isTerminal()) printf(HELP);
         else message((char*)HELP);
         return 0;
