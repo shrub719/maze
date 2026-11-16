@@ -46,8 +46,8 @@ int isCellValid(Maze* maze, CellRef cell) {
 }
 
 static const CellRef offsets[4] = {
-    {1, 0}, {-1, 0},
-    {0, 1}, {0, -1}
+    {1, 0}, {0, 1},
+    {-1, 0}, {0, -1}
 };
 
 void populateNeighbourArray(CellArray* array, Maze* maze, CellRef cell) {
@@ -62,38 +62,29 @@ void populateNeighbourArray(CellArray* array, Maze* maze, CellRef cell) {
 }
 
 void populateWallArray(CellArray* array, Maze* maze, CellRef cell) {
-    printf("populating wall of (%d, %d)\n", cell.x, cell.y);
     for (int i = 0; i < 4; i++) {
         CellRef w = addCells(cell, offsets[i]);
-        printf("checking (%d, %d): ", w.x, w.y);
-        if (isCellValid(maze, scaleCell(w, 2.0))) {
-            printf("valid ");
+        CellRef passage = addCells(cell, scaleCell(offsets[i], 2.0));
+        if (isCellValid(maze, passage)) {
             if (getCell(maze, w) == 1) {
-                printf("wall ");
                 appendToArray(array, w);
+                printf("added wall (%d, %d)\n", w.x, w.y);
             }
         }
-        printf("\n");
     }
 }
 
 // TODO: should not look in all 4 directions!! 
-void populateDividingArray(CellArray* array, int* visitedCount, Maze* maze, CellRef cell) {
-    printf("populating dividing cells of (%d, %d)\n", cell.x, cell.y);
+void populateDividedArray(CellArray* array, Maze* maze, CellRef cell) {
     for (int i = 0; i < 4; i++) {
         CellRef d = addCells(cell, offsets[i]);
-        printf("checking (%d, %d): ", d.x, d.y);
-        if (d.x == 0 && d.y == 1) *visitedCount += 1;   // special case for entry wall
-                                                        //
-        if (isCellValid(maze, scaleCell(d, 2.0))) {
-            printf("valid ");
-            if (getCell(maze, d) == 0) *visitedCount += 1;
-            else appendToArray(array, d);
-
-            if (getCell(maze, d) == 0) printf("visited ");
-            else printf("appended ");
+        if (isCellValid(maze, d)) {
+            if (getCell(maze, d) == 0) {
+                CellRef unvisitedCell = addCells(cell, offsets[(i + 2) % 4]);
+                printf("added cell (%d, %d)\n", unvisitedCell.x, unvisitedCell.y);
+                if (isCellValid(maze, unvisitedCell)) appendToArray(array, unvisitedCell);
+            }
         }
-        printf("\n");
     }
 }
 
@@ -163,29 +154,26 @@ void genMazeDFS(Maze* maze) {
 void genMazePrim(Maze* maze) {
     CellArray walls;
     CellRef cell;
-    CellArray cells;
+    CellArray dividedCells;
     CellRef wall;
-    cell.x = 0;
-    cell.y = 1;
+    cell.x = 1; cell.y = 1;
     setCell(maze, cell, 0);
     populateWallArray(&walls, maze, cell);
 
     while (walls.size > 0) {
-        printf("%d walls left\n", walls.size);
         wall = chooseAndPopFromArray(&walls);
-        clearArray(&cells);
-        int visitedCount = 0;
-        populateDividingArray(&cells, &visitedCount, maze, wall);
-        printf("visited %d\n", visitedCount);
+        clearArray(&dividedCells);
+        populateDividedArray(&dividedCells, maze, wall);
         
-        if (visitedCount == 1) {
+        if (dividedCells.size == 1) {
+            cell = dividedCells.cells[0];
+            setCell(maze, cell, 0);
             setCell(maze, wall, 0);
-            for (int i = 0; i < cells.size; i++) {
-                cell = cells.cells[i];
-                setCell(maze, cell, 0);
-                populateWallArray(&walls, maze, cell);
-            }
+            populateWallArray(&walls, maze, cell);
         }
     }
+
+    setCell(maze, (CellRef){0, 1}, 0);
+    setCell(maze, (CellRef){maze->width-1, maze->height-2}, 2);
 }
 
