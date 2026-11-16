@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    char seedString[STACK_SMALL];
+    char seedString[STACK];
     sprintf(seedString, "seed: %d\n", seed);
     message(seedString);
     setWindowSize(SIZE*width, SIZE*height);
@@ -66,20 +66,28 @@ int main(int argc, char** argv) {
     
     clear();
     drawMaze(&maze);
-    if (mode == THREEDEE) sleep(1000);
+    
+    Scene scene;
+    scene.x = NULL;
+    if (mode == THREEDEE) {
+        initScene(&scene, &maze);
+        sleep(1000);
+        setWindowSize((int)POV_WIDTH, (int)POV_HEIGHT);
+    }
 
     Robot robot;
     initRobot(&robot, mode, speed);
-    drawRobot(&robot, &maze);
+    drawRobot(&robot, &maze, &scene);
 
     if (solve == HUG) {
-        solveMazeHug(&robot, &maze);
+        solveMazeHug(&robot, &maze, &scene);
     } else if (solve == HUGRIGHT) {
-        solveMazeHugRight(&robot, &maze);
+        solveMazeHugRight(&robot, &maze, &scene);
     } else if (solve == RANDOM) {
-        solveMazeRandom(&robot, &maze);
+        solveMazeRandom(&robot, &maze, &scene);
     }
 
+    uninitScene(&scene);
     uninitMaze(&maze);
 
     return 0;

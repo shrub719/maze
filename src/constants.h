@@ -1,6 +1,4 @@
-#define STACK_SMALL 256
-// casually use 1 kb of ram
-#define STACK 256*2*2
+#define STACK 256
 
 static const int SIZE = 25;
 static const int WIDTH = 25;

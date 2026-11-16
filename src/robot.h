@@ -17,11 +17,13 @@ typedef struct {
     float speed;
 } Robot;
 
+#include "pov.h"
+
 void initRobot(Robot* robot, DrawMode mode, float speed);
-void drawRobot(Robot* robot, Maze* maze);
-void right(Robot* robot, Maze* maze);
-void left(Robot* robot, Maze* maze);
-void forward(Robot* robot, Maze* maze);
+void drawRobot(Robot* robot, Maze* maze, Scene* scene);
+void right(Robot* robot, Maze* maze, Scene* scene);
+void left(Robot* robot, Maze* maze, Scene* scene);
+void forward(Robot* robot, Maze* maze, Scene* scene);
 int atMarker(Robot* robot, Maze* maze);
 int canMoveForward(Robot* robot, Maze* maze);
 int canMoveLeft(Robot* robot, Maze* maze);

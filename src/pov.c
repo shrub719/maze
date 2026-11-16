@@ -4,12 +4,26 @@
 #include "pov.h"
 #include <math.h>
 
+void initScene(Scene* scene, Maze* maze) {
+    int size = maze->width * maze->height * 4 * 4 * sizeof(int);
+    scene->x = malloc(size);
+    scene->y = malloc(size);
+    clearScene(scene);
+}
+
+void uninitScene(Scene* scene) {
+    if (scene->x != NULL) {
+        free(scene->x);
+        free(scene->y);
+    }
+}
+
 void clearScene(Scene* scene) {
     scene->quadCount = 0;
 }
 
 void appendQuadToScene(Scene* scene, Quad quad) {
-    if (scene->quadCount >= STACK) return;
+    // if (scene->quadCount >= STACK) return;
 
     int i = scene->quadCount * 4;
     float* quadPtr = (float*)quad;      // sick pointer stuff B4
@@ -123,17 +137,15 @@ void drawScene(Scene* scene) {
     }
 }
 
-void drawThreeDee(Robot* robot, Maze* maze) {
+void drawThreeDee(Robot* robot, Maze* maze, Scene* scene) {
     foreground();
     clear();
-    setWindowSize((int)POV_WIDTH, (int)POV_HEIGHT);
     setColour(lightgray);
     fillRect(0, 200, (int)POV_WIDTH, (int)POV_HEIGHT);
 
-    Scene scene;
-    clearScene(&scene);
-    populateScene(&scene, robot, maze);
-    drawScene(&scene);
+    clearScene(scene);
+    populateScene(scene, robot, maze);
+    drawScene(scene);
 
     /*
     Quad testQuad = {

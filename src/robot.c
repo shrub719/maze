@@ -28,7 +28,7 @@ void initRobot(Robot* robot, DrawMode mode, float speed) {
     robot->speed = speed;
 }
 
-void drawRobot(Robot* robot, Maze* maze) {
+void drawRobot(Robot* robot, Maze* maze, Scene* scene) {
     if (robot->mode == TWODEE) {
         float x = SIZE*robot->aPos.x;
         float y = SIZE*robot->aPos.y;
@@ -41,7 +41,7 @@ void drawRobot(Robot* robot, Maze* maze) {
         setColour(red);
         fillOval(x+circleOffsets[i], y+circleOffsets[i+1], 12, 12);
     } else if (robot->mode == THREEDEE) {
-        drawThreeDee(robot, maze);
+        drawThreeDee(robot, maze, scene);
     }
 }
 
@@ -70,29 +70,29 @@ Vec interpolateForwardCell(Robot* robot, float f) {
     };
 }
 
-void turn(Robot* robot, Maze* maze, int amount) {
+void turn(Robot* robot, Maze* maze, Scene* scene, int amount) {
     Direction newDir = (robot->dir + amount) % 4;
     robot->dir = newDir;
 
     for (int i = 0; i <= FPS; i++) {
         robot->aDir += (float)amount / FPS;
-        drawRobot(robot, maze);
+        drawRobot(robot, maze, scene);
         sleep(SLEEP / robot->speed); 
     }
 
     robot->aDir = (float)newDir;
-    drawRobot(robot, maze);
+    drawRobot(robot, maze, scene);
 }
 
-void right(Robot* robot, Maze* maze) {
-    turn(robot, maze, 1);
+void right(Robot* robot, Maze* maze, Scene* scene) {
+    turn(robot, maze, scene, 1);
 }
 
-void left(Robot* robot, Maze* maze) {
-    turn(robot, maze, -1);
+void left(Robot* robot, Maze* maze, Scene* scene) {
+    turn(robot, maze, scene, -1);
 }
 
-void forward(Robot* robot, Maze* maze) {
+void forward(Robot* robot, Maze* maze, Scene* scene) {
     if (!canMoveForward(robot, maze)) {
         message("cannot move forward\n");
         return;
@@ -101,7 +101,7 @@ void forward(Robot* robot, Maze* maze) {
     for (int i = 0; i <= FPS; i++) {
         float f = (float)i / FPS;
         robot->aPos = interpolateForwardCell(robot, f);
-        drawRobot(robot, maze);
+        drawRobot(robot, maze, scene);
         sleep(SLEEP / robot->speed);
     }
 
@@ -110,7 +110,7 @@ void forward(Robot* robot, Maze* maze) {
     robot->aPos.y = (float)forwardCell.y;
     // (Vec)(forwardCell)???
     robot->pos = forwardCell;
-    drawRobot(robot, maze);
+    drawRobot(robot, maze, scene);
 }
 
 int atMarker(Robot* robot, Maze* maze) {

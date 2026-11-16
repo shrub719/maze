@@ -12,9 +12,12 @@ typedef Edge Wall[2];
 
 typedef struct {
     int quadCount;
-    int x[STACK*4];
-    int y[STACK*4];
+    int* x;
+    int* y;
 } Scene;
 
-void drawThreeDee(Robot* robot, Maze* maze);
+void drawThreeDee(Robot* robot, Maze* maze, Scene* scene);
+void clearScene(Scene* scene);
+void initScene(Scene* scene, Maze* maze);
+void uninitScene(Scene* scene);
 
