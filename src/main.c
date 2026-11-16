@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
             width = atoi(argv[i+1]);
             if (width % 2 == 0) width--;
             i++;
-        } else if (strcmp(argv[i+1], "--height") == 0) {
+        } else if (strcmp(argv[i], "--height") == 0) {
             height = atoi(argv[i+1]);
             if (height % 2 == 0) height--;
             i++;
