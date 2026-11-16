@@ -3,10 +3,19 @@
 #include "gen.h"
 #include "robot.h"
 #include "solve.h"
+#include "sys.h"
 #include <string.h>
 #include <time.h>
 
 int main(int argc, char** argv) {
+    // uses unistd to check if it's being piped
+    //   decides which print function to use
+    if (strcmp(argv[1], "--help") == 0) {
+        if (isTerminal()) printf(HELP);
+        else message((char*)HELP);
+        return 0;
+    }
+
     displayImageURL("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%2Fid%2FOIP.scHvyIKsLexn0eOtLY4PQwAAAA%3Fr%3D0%26pid%3DApi&f=1&ipt=0877f0748ce0d2c32f1483db716648655d0f364d8d4a46f7d7235682cc741b40&ipo=images", 0, 0);
 
     DrawMode mode = TWODEE;
