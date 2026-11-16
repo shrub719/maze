@@ -52,7 +52,7 @@ static const CellVec offsets[4] = {
 
 void populateNeighbourArray(CellArray* array, Maze* maze, CellVec cell) {
     for (int i = 0; i < 4; i++) {
-        CellVec nb = addCellVecs(cell, scaleCellVecVecVec(offsets[i], 2.0));
+        CellVec nb = addCellVecs(cell, scaleCellVec(offsets[i], 2.0));
         if (isCellValid(maze, nb)) {
             if (getCell(maze, nb) != 0) {
                 appendToArray(array, offsets[i]);
@@ -64,7 +64,7 @@ void populateNeighbourArray(CellArray* array, Maze* maze, CellVec cell) {
 void populateWallArray(CellArray* array, Maze* maze, CellVec cell) {
     for (int i = 0; i < 4; i++) {
         CellVec w = addCellVecs(cell, offsets[i]);
-        CellVec passage = addCellVecs(cell, scaleCellVecVecVec(offsets[i], 2.0));
+        CellVec passage = addCellVecs(cell, scaleCellVec(offsets[i], 2.0));
         if (isCellValid(maze, passage)) {
             if (getCell(maze, w) == 1) {
                 appendToArray(array, w);
@@ -139,7 +139,7 @@ void genMazeDFS(Maze* maze) {
             pushStack(&stack, cell);  
             CellVec offset = chooseFromArray(&nbs);     // random unvisited neighbour
             CellVec step = addCellVecs(cell, offset);
-            cell = addCellVecs(cell, scaleCellVecVecVec(offset, 2.0));
+            cell = addCellVecs(cell, scaleCellVec(offset, 2.0));
             setCell(maze, step, 0);
             setCell(maze, cell, 0);
         }
