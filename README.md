@@ -57,7 +57,7 @@ Run the program and pipe it into Draw App with
     Set the width of the maze. Must be odd.
 - `--height [int]`  
     Set the height of the maze. Must be odd.
--  `--help`
+-  `--help`  
     Display this help information.
 
 > One of my favourite things to do is run
