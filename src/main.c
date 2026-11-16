@@ -33,6 +33,8 @@ int main(int argc, char** argv) {
             } else if (strcmp(argv[i+1], "random") == 0) {
                 solve = RANDOM;
             }
+        } else if (strcmp(argv[i], "--width") == 0) {
+            // TODO
         }
     }
 

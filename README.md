@@ -23,7 +23,7 @@ You also need `drawapp-5.0.jar` with Java 21 or later.
 From the root directory, build the program with 
 
 ```bash
-gcc ./src/*.c ./src/include/*.c -o maze
+gcc ./src/*.c ./src/include/*.c -o maze -lm
 ```
 
 ensuring `graphics.c` and `graphics.h` are in the correct location.
@@ -53,6 +53,10 @@ Run the program and pipe it into Draw App with
     Set a seed for maze generation.
 - `--speed [float]`  
     Set a speed multiplier for animation.
+- `--width [int]`
+    Set the width of the maze. Must be odd.
+- `--height [int]`
+    Set the height of the maze. Must be odd.
 
 > One of my favourite things to do is run
 > ```sh
