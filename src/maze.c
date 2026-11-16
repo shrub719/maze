@@ -15,10 +15,18 @@ void setCell(Maze* maze, CellRef cell, int c) {
 
     maze->cells[i] = c;
 }
+
 CellRef addCells(CellRef c1, CellRef c2) {
     return (CellRef){
         c1.x + c2.x,
         c1.y + c2.y
+    };
+}
+
+CellRef scaleCell(CellRef cell, float scalar) {
+    return (CellRef){
+        (int)(cell.x * scalar),
+        (int)(cell.y * scalar)
     };
 }
 

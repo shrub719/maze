@@ -18,6 +18,7 @@ typedef struct {
 Cell getCell(Maze* maze, CellRef cell);
 void setCell(Maze* maze, CellRef cell, int c);
 CellRef addCells(CellRef c1, CellRef c2);
+CellRef scaleCell(CellRef cell, float scalar);
 void initMaze(Maze* maze, int width, int height);
 void uninitMaze(Maze* maze);
 void drawMaze(Maze* maze);
