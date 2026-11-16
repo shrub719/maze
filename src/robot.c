@@ -45,22 +45,23 @@ void drawRobot(Robot* robot, Maze* maze) {
     }
 }
 
-CellRef getForwardCell(Robot* robot) {
+CellVec getForwardCell(Robot* robot) {
     int i = 2*robot->dir;
-    return addCells(
+    return addCellVecs(
         robot->pos,
-        (CellRef){directionalOffsets[i], directionalOffsets[i+1]}
+        (CellVec){directionalOffsets[i], directionalOffsets[i+1]}
     );
 }
 
-CellRef getTurnedCell(Robot* robot, int amount) {
+CellVec getTurnedCell(Robot* robot, int amount) {
     int i = 2*((robot->dir + amount) % 4);
-    return addCells(
+    return addCellVecs(
         robot->pos,
-        (CellRef){directionalOffsets[i], directionalOffsets[i+1]}
+        (CellVec){directionalOffsets[i], directionalOffsets[i+1]}
     );
 }
 
+// used to animate moving forwards
 Vec interpolateForwardCell(Robot* robot, float f) {
     int i = 2*robot->dir;
     return (Vec){
@@ -104,7 +105,7 @@ void forward(Robot* robot, Maze* maze) {
         sleep(SLEEP / robot->speed);
     }
 
-    CellRef forwardCell = getForwardCell(robot);
+    CellVec forwardCell = getForwardCell(robot);
     robot->aPos.x = (float)forwardCell.x;
     robot->aPos.y = (float)forwardCell.y;
     // (Vec)(forwardCell)???
@@ -119,6 +120,10 @@ int atMarker(Robot* robot, Maze* maze) {
 int canMoveForward(Robot* robot, Maze* maze) {
     return (getCell(maze, getForwardCell(robot)) != WALL);
 }
+
+// these are effectively the same as left(); canMoveForward(); right();
+// and vice-versa; i've used them so the program doesn't give me a headache
+// when running
 
 int canMoveRight(Robot* robot, Maze* maze) {
     return (getCell(maze, getTurnedCell(robot, 1)) != WALL);

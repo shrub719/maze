@@ -1,12 +1,12 @@
 #pragma once
 
 typedef struct {
-    CellRef cells[STACK];
+    CellVec cells[STACK];
     int size;
 } CellStack;
 
 typedef struct {
-    CellRef cells[STACK];
+    CellVec cells[STACK];
     int size;
 } CellArray;
 

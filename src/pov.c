@@ -34,7 +34,6 @@ void appendWallToScene(Scene* scene, Wall wall) {
         v1.y = POV_HEIGHT/2.0 * (1 + wall[i].height);
         v2.y = POV_HEIGHT/2.0 * (1 - wall[i].height);
         
-        // surely there's a clever way TODO this
         if (i == 0) {
             quad[0] = v1;
             quad[1] = v2;
@@ -86,7 +85,7 @@ void populateScene(Scene* scene, Robot* robot, Maze* maze) {
     int height = maze->height;
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) { 
-            Cell cell = getCell(maze, (CellRef){i, j});
+            Cell cell = getCell(maze, (CellVec){i, j});
             if (cell == WALL) {
                 int pushWall = 1;
                 Edge edges[4];

@@ -1,33 +1,18 @@
 #include "maze.h"
 
-// duplicated; extract (TODO)
-typedef struct {
-    // sometimes in grid units; sometimes in pixel coords
-    float x;
-    float y;
-} Vec;
-
 typedef enum {
     NORTH = 0, EAST, SOUTH, WEST
 } Direction;
-
-/*
-// which actions to actually animate as a single frame
-typedef enum {
-    STEPS = 0, TURNS, A_STEPS, A_TURNS
-} AnimationLevel;
-*/
 
 typedef enum {
     TWODEE = 0, THREEDEE
 } DrawMode;
 
 typedef struct {
-    CellRef pos;
+    CellVec pos;
     Vec aPos;       // animated/interpolated
     Direction dir;
     float aDir;     // animated/interpolated
-    // AnimationLevel anim;
     DrawMode mode;
     float speed;
 } Robot;

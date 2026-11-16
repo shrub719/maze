@@ -6,7 +6,7 @@ void initStack(CellStack* stack) {
     stack->size = 0;
 }
 
-void pushStack(CellStack* stack, CellRef cell) {
+void pushStack(CellStack* stack, CellVec cell) {
     if (stack->size >= 256) {
         message("stack overflow\n");
         return;
@@ -15,10 +15,10 @@ void pushStack(CellStack* stack, CellRef cell) {
     stack->size += 1;
 }
 
-CellRef popStack(CellStack* stack) {
+CellVec popStack(CellStack* stack) {
     if (stack->size == 0) {
         message("stack empty\n");
-        return (CellRef){-1, -1};  // this is probably bad; TODO
+        return (CellVec){-1, -1};  // this is probably bad; TODO
     }
     stack->size -= 1;
     return stack->cells[stack->size];
@@ -29,7 +29,7 @@ void clearArray(CellArray* array) {
     array->size = 0;
 }
 
-void appendToArray(CellArray* array, CellRef cell) {
+void appendToArray(CellArray* array, CellVec cell) {
     if (array->size >= STACK) {
         message("array overflow\n");
         return;
@@ -38,21 +38,21 @@ void appendToArray(CellArray* array, CellRef cell) {
     array->size += 1;
 }
 
-int isCellValid(Maze* maze, CellRef cell) {
+int isCellValid(Maze* maze, CellVec cell) {
     return (
-        0 < cell.x && cell.x < maze->width - 1      // is the 0 necessary? is int signed?
+        0 < cell.x && cell.x < maze->width - 1
      && 0 < cell.y && cell.y < maze->height - 1
     );
 }
 
-static const CellRef offsets[4] = {
+static const CellVec offsets[4] = {
     {1, 0}, {0, 1},
     {-1, 0}, {0, -1}
 };
 
-void populateNeighbourArray(CellArray* array, Maze* maze, CellRef cell) {
+void populateNeighbourArray(CellArray* array, Maze* maze, CellVec cell) {
     for (int i = 0; i < 4; i++) {
-        CellRef nb = addCells(cell, scaleCell(offsets[i], 2.0));
+        CellVec nb = addCellVecs(cell, scaleCellVecVecVec(offsets[i], 2.0));
         if (isCellValid(maze, nb)) {
             if (getCell(maze, nb) != 0) {
                 appendToArray(array, offsets[i]);
@@ -61,10 +61,10 @@ void populateNeighbourArray(CellArray* array, Maze* maze, CellRef cell) {
     }
 }
 
-void populateWallArray(CellArray* array, Maze* maze, CellRef cell) {
+void populateWallArray(CellArray* array, Maze* maze, CellVec cell) {
     for (int i = 0; i < 4; i++) {
-        CellRef w = addCells(cell, offsets[i]);
-        CellRef passage = addCells(cell, scaleCell(offsets[i], 2.0));
+        CellVec w = addCellVecs(cell, offsets[i]);
+        CellVec passage = addCellVecs(cell, scaleCellVecVecVec(offsets[i], 2.0));
         if (isCellValid(maze, passage)) {
             if (getCell(maze, w) == 1) {
                 appendToArray(array, w);
@@ -74,13 +74,12 @@ void populateWallArray(CellArray* array, Maze* maze, CellRef cell) {
     }
 }
 
-// TODO: should not look in all 4 directions!! 
-void populateDividedArray(CellArray* array, Maze* maze, CellRef cell) {
+void populateDividedArray(CellArray* array, Maze* maze, CellVec cell) {
     for (int i = 0; i < 4; i++) {
-        CellRef d = addCells(cell, offsets[i]);
+        CellVec d = addCellVecs(cell, offsets[i]);
         if (isCellValid(maze, d)) {
             if (getCell(maze, d) == 0) {
-                CellRef unvisitedCell = addCells(cell, offsets[(i + 2) % 4]);
+                CellVec unvisitedCell = addCellVecs(cell, offsets[(i + 2) % 4]);
                 printf("added cell (%d, %d)\n", unvisitedCell.x, unvisitedCell.y);
                 if (isCellValid(maze, unvisitedCell)) appendToArray(array, unvisitedCell);
             }
@@ -93,15 +92,15 @@ int randomIndex(int size) {
     return rand() % size;
 }
 
-CellRef chooseFromArray(CellArray* array) {
+CellVec chooseFromArray(CellArray* array) {
     return array->cells[randomIndex(array->size)];
 }
 
-CellRef chooseAndPopFromArray(CellArray* array) {
-    if (array->size == 0) return (CellRef){-1, -1}; // TODO bad
+CellVec chooseAndPopFromArray(CellArray* array) {
+    if (array->size == 0) return (CellVec){-1, -1}; // TODO bad
 
     int i = randomIndex(array->size);
-    CellRef c = array->cells[i];
+    CellVec c = array->cells[i];
 
     /* 
     // i was really proud of this but its O(n) for no reason
@@ -120,7 +119,7 @@ void genMazeDFS(Maze* maze) {
     CellStack stack;
     initStack(&stack);
     CellArray nbs;
-    CellRef cell;
+    CellVec cell;
 
     cell.x = 1;
     cell.y = 1;
@@ -138,24 +137,23 @@ void genMazeDFS(Maze* maze) {
             cell = popStack(&stack);
         } else {
             pushStack(&stack, cell);  
-            CellRef offset = chooseFromArray(&nbs);     // random unvisited neighbour
-            CellRef step = addCells(cell, offset);
-            cell = addCells(cell, scaleCell(offset, 2.0));
+            CellVec offset = chooseFromArray(&nbs);     // random unvisited neighbour
+            CellVec step = addCellVecs(cell, offset);
+            cell = addCellVecs(cell, scaleCellVecVecVec(offset, 2.0));
             setCell(maze, step, 0);
             setCell(maze, cell, 0);
-            // TODO: also fill the one it jumps over
         }
     }
 
-    setCell(maze, (CellRef){0, 1}, 0);
-    setCell(maze, (CellRef){maze->width-1, maze->height-2}, 2);
+    setCell(maze, (CellVec){0, 1}, 0);
+    setCell(maze, (CellVec){maze->width-1, maze->height-2}, 2);
 }
 
 void genMazePrim(Maze* maze) {
     CellArray walls;
-    CellRef cell;
+    CellVec cell;
     CellArray dividedCells;
-    CellRef wall;
+    CellVec wall;
     cell.x = 1; cell.y = 1;
     setCell(maze, cell, 0);
     populateWallArray(&walls, maze, cell);
@@ -173,7 +171,7 @@ void genMazePrim(Maze* maze) {
         }
     }
 
-    setCell(maze, (CellRef){0, 1}, 0);
-    setCell(maze, (CellRef){maze->width-1, maze->height-2}, 2);
+    setCell(maze, (CellVec){0, 1}, 0);
+    setCell(maze, (CellVec){maze->width-1, maze->height-2}, 2);
 }
 
