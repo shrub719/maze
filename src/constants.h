@@ -1,4 +1,4 @@
-#define STACK 256
+#define STACK 256*2*2
 
 static const int SIZE = 25;
 static const int WIDTH = 25;
